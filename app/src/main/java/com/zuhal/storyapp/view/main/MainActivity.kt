@@ -1,4 +1,4 @@
-package com.zuhal.storyapp
+package com.zuhal.storyapp.view.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
