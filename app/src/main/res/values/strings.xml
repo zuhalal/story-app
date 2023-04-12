@@ -7,4 +7,6 @@
     <string name="register">Register</string>
     <string name="name">Nama</string>
     <string name="masukkan_nama_anda">Masukkan nama anda</string>
+    <string name="or">OR</string>
+    <string name="register_new_account">Register New Account</string>
 </resources>

@@ -13,6 +13,7 @@ import com.zuhal.storyapp.databinding.ActivityLoginBinding
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.view.main.MainActivity
 import com.zuhal.storyapp.data.Result
+import com.zuhal.storyapp.view.register.RegisterActivity
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -25,6 +26,11 @@ class LoginActivity : AppCompatActivity() {
 
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val loginViewModel: LoginViewModel by viewModels { factory }
+
+        binding.registerButton.setOnClickListener{
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.loginButton.setOnClickListener{
             run {
