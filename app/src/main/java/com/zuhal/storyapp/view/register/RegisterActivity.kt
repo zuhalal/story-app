@@ -60,7 +60,7 @@ class RegisterActivity : AppCompatActivity() {
                                     AlertDialog.Builder(this).apply {
                                         setTitle("Gagal")
                                         setMessage("Anda gagal melakukan registrasi.")
-                                        setPositiveButton("Lanjut") { _, _ -> }
+                                        setPositiveButton("Lanjut") { dialog, _ -> dialog.dismiss() }
                                         create()
                                         show()
                                     }
