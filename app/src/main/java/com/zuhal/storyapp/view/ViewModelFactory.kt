@@ -11,6 +11,7 @@ import com.zuhal.storyapp.data.StoryUserRepository
 import com.zuhal.storyapp.di.Injection
 import com.zuhal.storyapp.view.login.LoginViewModel
 import com.zuhal.storyapp.view.main.MainViewModel
+import com.zuhal.storyapp.view.register.RegisterViewModel
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -27,6 +28,10 @@ class ViewModelFactory private constructor(
 
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(storyUserRepository, pref) as T
+        }
+
+        if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
+            return RegisterViewModel(storyUserRepository, pref) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
