@@ -1,5 +1,6 @@
 package com.zuhal.storyapp.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.zuhal.storyapp.data.remote.models.Story
@@ -24,6 +25,7 @@ class StoryUserRepository private constructor(
 
     @OptIn(DelicateCoroutinesApi::class)
     fun postLogin(email: String, password: String, pref: SettingPreferences): LiveData<Result<String>> {
+        message.value = Result.Loading
         val client = apiService.login(email, password)
         client.enqueue(object: Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -41,18 +43,23 @@ class StoryUserRepository private constructor(
                         message.value =  Result.Success(msg)
                     } else {
                         val msg = response.body()?.message ?: ""
-                        message.value =  Result.Success(msg)
+                        message.value =  Result.Error(msg)
                     }
+                } else {
+                    val msg = response.body()?.message ?: ""
+                    message.value =  Result.Error(msg)
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 message.value = Result.Error(t.message.toString())
+                Log.e("sadas", message.value.toString())
             }
         })
         return message
     }
 
     fun postRegister(email: String, password: String, name: String): LiveData<Result<String>> {
+        message.value = Result.Loading
         val client = apiService.register(name, email, password)
         client.enqueue(object: Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
@@ -64,7 +71,7 @@ class StoryUserRepository private constructor(
                         message.value =  Result.Success(msg)
                     } else {
                         val msg = response.body()?.message ?: ""
-                        message.value =  Result.Success(msg)
+                        message.value =  Result.Error(msg)
                     }
                 }
             }
@@ -102,6 +109,7 @@ class StoryUserRepository private constructor(
     fun logout(pref: SettingPreferences) {
         GlobalScope.launch {
             pref.saveTokenSetting("")
+            pref.saveUser(UserModel(name="", userId = ""))
         }
     }
 

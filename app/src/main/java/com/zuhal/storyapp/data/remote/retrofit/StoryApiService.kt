@@ -10,7 +10,7 @@ import retrofit2.http.*
 
 interface StoryApiService {
     @FormUrlEncoded
-    @POST("/register")
+    @POST("register")
     fun register(
         @Field("name") name: String,
         @Field("email") email: String,
@@ -18,7 +18,7 @@ interface StoryApiService {
     ): Call<RegisterResponse>
 
     @FormUrlEncoded
-    @POST("/login")
+    @POST("login")
     fun login(
         @Field("email") email: String,
         @Field("password") password: String,
@@ -26,18 +26,18 @@ interface StoryApiService {
 
     @Multipart
     @Headers("Content-Type: multipart/form-data")
-    @POST("/stories")
+    @POST("stories")
     fun postStories(
         @Field("description") description: String,
         @Part file: MultipartBody.Part,
         @Header("Authorization") authorization: String
     ): Call<LoginResponse>
 
-    @GET("/stories")
+    @GET("stories")
     fun getAllStories(
         @Header("Authorization") authorization: String
     ): Call<GetAllStoryResponse>
 
-    @GET("/stories/{id}")
+    @GET("stories/{id}")
     fun getDetailStory(@Path("id") username: String): Call<List<DetailStoryResponse>>
 }
