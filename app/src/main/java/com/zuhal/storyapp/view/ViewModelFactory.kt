@@ -31,7 +31,7 @@ class ViewModelFactory private constructor(
         }
 
         if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-            return RegisterViewModel(storyUserRepository, pref) as T
+            return RegisterViewModel(storyUserRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

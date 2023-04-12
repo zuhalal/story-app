@@ -1,5 +1,6 @@
 package com.zuhal.storyapp.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.zuhal.storyapp.data.remote.models.Story
@@ -58,6 +59,8 @@ class StoryUserRepository private constructor(
 
     fun postRegister(email: String, password: String, name: String): LiveData<Result<String>> {
         message.value = Result.Loading
+        Log.e("email", email)
+        Log.e("name", name)
         val client = apiService.register(name, email, password)
         client.enqueue(object: Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
@@ -71,6 +74,9 @@ class StoryUserRepository private constructor(
                         val msg = response.body()?.message ?: ""
                         message.value =  Result.Error(msg)
                     }
+                } else {
+                    val msg = response.body()?.message ?: ""
+                    message.value =  Result.Error(msg)
                 }
             }
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
