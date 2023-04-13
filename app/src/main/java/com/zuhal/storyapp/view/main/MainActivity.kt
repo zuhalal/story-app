@@ -18,6 +18,7 @@ import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
 import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.data.remote.models.Story
+import com.zuhal.storyapp.view.add.AddStoryActivity
 import com.zuhal.storyapp.view.detail.StoryDetailActivity
 
 class MainActivity : AppCompatActivity() {
@@ -111,6 +112,11 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_logout -> {
                 val loginViewModel: LoginViewModel by viewModels { factory }
                 loginViewModel.logout()
+                return true
+            }
+            R.id.menu_add -> {
+                val intent = Intent(this@MainActivity, AddStoryActivity::class.java)
+                startActivity(intent)
                 return true
             }
             else -> return true

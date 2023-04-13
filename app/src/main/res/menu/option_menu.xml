@@ -6,4 +6,8 @@
         android:title="@string/logout"
         android:icon = "@drawable/ic_baseline_logout_24_white"
         app:showAsAction="always" />
+    <item android:id="@+id/menu_add"
+        android:title="@string/logout"
+        android:icon = "@drawable/ic_baseline_add_24_white"
+        app:showAsAction="always" />
 </menu>
