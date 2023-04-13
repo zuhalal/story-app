@@ -4,6 +4,5 @@ import androidx.lifecycle.ViewModel
 import com.zuhal.storyapp.data.StoryUserRepository
 
 class MainViewModel(private val repository: StoryUserRepository): ViewModel() {
-//    fun postLogin(email: String, password: String) =>repos
     fun getListStories(token: String) = repository.getListStory(token)
 }
