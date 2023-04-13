@@ -1,7 +1,10 @@
 package com.zuhal.storyapp.data.remote.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Story(
 	@field:SerializedName("id")
 	val id: String,
@@ -19,8 +22,8 @@ data class Story(
 	val description: String,
 
 	@field:SerializedName("lon")
-	val lon: Any?,
+	val lon: Float?,
 
 	@field:SerializedName("lat")
-	val lat: Any?
-)
+	val lat: Float?
+): Parcelable

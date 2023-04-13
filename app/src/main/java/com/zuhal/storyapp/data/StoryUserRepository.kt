@@ -97,17 +97,13 @@ class StoryUserRepository private constructor(
                 if (response.isSuccessful) {
                     if (response.body()?.error == false) {
                         val listStory = response.body()?.listStory as List<Story>
-                        Log.e("abc", listStory.toString())
                         apiResult.value = Result.Success(listStory)
-                    } else {
-                        Log.e("def", "dasdsajn")
                     }
                 }
             }
 
             override fun onFailure(call: Call<GetAllStoryResponse>, t: Throwable) {
                 apiResult.value = Result.Error(t.message.toString())
-                Log.e("deff", "dcxcxz")
             }
         })
 

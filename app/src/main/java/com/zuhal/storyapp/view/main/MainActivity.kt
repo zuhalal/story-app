@@ -18,6 +18,7 @@ import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
 import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.data.remote.models.Story
+import com.zuhal.storyapp.view.detail.StoryDetailActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -87,9 +88,9 @@ class MainActivity : AppCompatActivity() {
         listUserAdapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback {
             override fun onItemClicked(data: Story, index: Int) {
 //                showSelectedUser(data)
-//                val intent = Intent(this@MainActivity, UserDetailActivity::class.java)
-//                intent.putExtra(UserDetailActivity.EXTRA_USER, data)
-//                startActivity(intent)
+                val intent = Intent(this@MainActivity, StoryDetailActivity::class.java)
+                intent.putExtra(StoryDetailActivity.EXTRA_USER, data)
+                startActivity(intent)
             }
         })
     }
