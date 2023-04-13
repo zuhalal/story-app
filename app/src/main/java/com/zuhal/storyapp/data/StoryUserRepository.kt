@@ -7,7 +7,7 @@ import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.data.remote.retrofit.StoryApiService
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
-import com.zuhal.storyapp.data.remote.models.RegisterResponse
+import com.zuhal.storyapp.data.remote.models.CommonResponse
 import com.zuhal.storyapp.utils.AppExecutors
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
@@ -15,6 +15,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlinx.coroutines.GlobalScope
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class StoryUserRepository private constructor(
     private val apiService: StoryApiService,
@@ -62,8 +64,8 @@ class StoryUserRepository private constructor(
         Log.e("email", email)
         Log.e("name", name)
         val client = apiService.register(name, email, password)
-        client.enqueue(object: Callback<RegisterResponse> {
-            override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
+        client.enqueue(object: Callback<CommonResponse> {
+            override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body?.error == false) {
@@ -79,7 +81,7 @@ class StoryUserRepository private constructor(
                     message.value =  Result.Error(msg)
                 }
             }
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                 message.value = Result.Error(t.message.toString())
             }
         })
@@ -108,6 +110,37 @@ class StoryUserRepository private constructor(
         })
 
         return apiResult
+    }
+
+    fun postStory(image: MultipartBody.Part, description: RequestBody, token: String): LiveData<Result<String>> {
+        message.value = Result.Loading
+        val service = apiService.postStories(description, image, token)
+        service.enqueue(object : Callback<CommonResponse> {
+            override fun onResponse(
+                call: Call<CommonResponse>,
+                response: Response<CommonResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body?.error == false) {
+
+                        val msg = response.body()?.message ?: ""
+                        message.value =  Result.Success(msg)
+                    } else {
+                        val msg = response.body()?.message ?: ""
+                        message.value =  Result.Error(msg)
+                    }
+                } else {
+                    val msg = response.body()?.message ?: ""
+                    message.value =  Result.Error(msg)
+                }
+            }
+            override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
+                message.value = Result.Error(t.message.toString())
+            }
+        })
+
+        return message
     }
 
     @OptIn(DelicateCoroutinesApi::class)

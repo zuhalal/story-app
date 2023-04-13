@@ -19,4 +19,6 @@
     <string name="not_allowed_permission">Tidak mendapatkan permission.</string>
     <string name="preview_desc">Preview untuk gambar yang akan diunggah</string>
     <string name="add_desc_hint">Masukkan deskripsi</string>
+    <string name="not_put_the_picture">Silakan masukkan berkas gambar terlebih dahulu.</string>
+    <string name="upload_success">Story berhasil diunggah</string>
 </resources>

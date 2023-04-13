@@ -8,22 +8,37 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.zuhal.storyapp.R
+import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.databinding.ActivityAddStoryBinding
 import com.zuhal.storyapp.utils.createCustomTempFile
 import com.zuhal.storyapp.utils.uriToFile
+import com.zuhal.storyapp.view.ViewModelFactory
+import com.zuhal.storyapp.view.login.LoginViewModel
+import com.zuhal.storyapp.view.main.MainActivity
+import com.zuhal.storyapp.view.main.MainViewModel
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class AddStoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddStoryBinding
     private lateinit var currentPhotoPath: String
+    private lateinit var factory: ViewModelFactory
     private var getFile: File? = null
+    private val mainViewModel: MainViewModel by viewModels { factory }
+    private val loginViewModel: LoginViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +54,69 @@ class AddStoryActivity : AppCompatActivity() {
             )
         }
 
+        factory = ViewModelFactory.getInstance(this)
+
         binding.cameraButton.setOnClickListener { startTakePhoto() }
         binding.galleryButton.setOnClickListener { startGallery() }
+        binding.uploadButton.setOnClickListener {
+            uploadImage()
+        }
+    }
+
+    private fun uploadImage() {
+        if (getFile != null) {
+            val file = getFile as File
+
+            val description = binding.descriptionInput.text.toString().toRequestBody("text/plain".toMediaType())
+
+            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "photo",
+                file.name,
+                requestImageFile
+            )
+
+            loginViewModel.getToken().observe(this) {
+                if (it !== "") {
+                    mainViewModel.postStory(imageMultipart, description, "Bearer $it").observe(this) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {
+                                    showLoading(true)
+                                }
+                                is Result.Success -> {
+                                    showLoading(false)
+                                    Toast.makeText(
+                                        this,
+                                        getString(R.string.upload_success),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                is Result.Error -> {
+                                    showLoading(false)
+                                    Toast.makeText(
+                                        this,
+                                        result.error,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        } else {
+            Toast.makeText(this@AddStoryActivity, getString(R.string.not_put_the_picture), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private val launcherIntentCamera = registerForActivityResult(

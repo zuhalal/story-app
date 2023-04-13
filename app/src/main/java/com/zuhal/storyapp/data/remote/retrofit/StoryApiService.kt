@@ -3,8 +3,9 @@ package com.zuhal.storyapp.data.remote.retrofit
 import com.zuhal.storyapp.data.remote.models.DetailStoryResponse
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
-import com.zuhal.storyapp.data.remote.models.RegisterResponse
+import com.zuhal.storyapp.data.remote.models.CommonResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -15,7 +16,7 @@ interface StoryApiService {
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String,
-    ): Call<RegisterResponse>
+    ): Call<CommonResponse>
 
     @FormUrlEncoded
     @POST("login")
@@ -25,13 +26,12 @@ interface StoryApiService {
     ): Call<LoginResponse>
 
     @Multipart
-    @Headers("Content-Type: multipart/form-data")
     @POST("stories")
     fun postStories(
-        @Field("description") description: String,
+        @Part("description") description: RequestBody,
         @Part file: MultipartBody.Part,
         @Header("Authorization") authorization: String
-    ): Call<LoginResponse>
+    ): Call<CommonResponse>
 
     @GET("stories")
     fun getAllStories(
