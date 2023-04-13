@@ -1,5 +1,7 @@
 package com.zuhal.storyapp.view.register
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupView()
+        playAnimation()
 
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val registerViewModel: RegisterViewModel by viewModels { factory }
@@ -69,6 +72,38 @@ class RegisterActivity : AppCompatActivity() {
                         }
                     }
             }
+        }
+    }
+
+    private fun playAnimation() {
+        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(500)
+
+        val name = ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(500)
+        val nameLayout = ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(500)
+
+        val email = ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
+        val emailLayout = ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+
+        val password = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
+        val passwordLayout = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+
+        val signup = ObjectAnimator.ofFloat(binding.registerButton, View.ALPHA, 1f).setDuration(500)
+
+        val nameTogether = AnimatorSet().apply {
+            playTogether(name, nameLayout)
+        }
+
+        val emailTogether = AnimatorSet().apply {
+            playTogether(email, emailLayout)
+        }
+
+        val passwordTogether = AnimatorSet().apply {
+            playTogether(password, passwordLayout)
+        }
+
+        AnimatorSet().apply {
+            playSequentially(title, nameTogether, emailTogether, passwordTogether, signup)
+            start()
         }
     }
 
