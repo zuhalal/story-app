@@ -43,4 +43,6 @@
     <string name="password_empty">Password cannot be empty</string>
     <string name="invalid_password">Password minimum 8 characters</string>
     <string name="invalid_input">Make sure all fields are not empty</string>
+    <string name="language">Language</string>
+    <string name="add_story">Add Story</string>
 </resources>

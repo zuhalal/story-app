@@ -2,6 +2,7 @@ package com.zuhal.storyapp.view.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -126,6 +127,10 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_add -> {
                 val intent = Intent(this@MainActivity, AddStoryActivity::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.menu_language -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                 return true
             }
             else -> return true
