@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
-                setContentView(binding.root)
                 rvUser = binding.rvStory
                 mainViewModel.getListStories("${getString(R.string.bearer)} $token").observe(this) { result ->
                     if (result != null) {
@@ -75,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+            setContentView(binding.root)
         }
 
         loginViewModel.getUser().observe(this) { user ->

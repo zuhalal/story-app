@@ -2,6 +2,7 @@ package com.zuhal.storyapp.view.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.zuhal.storyapp.R
@@ -38,6 +40,9 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginButton.setOnClickListener{
             run {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
+
                 if (binding.edLoginEmail.text.toString().isEmpty() || binding.edLoginPassword.text.toString().isEmpty()) {
                     showFailedDialog(getString(R.string.invalid_input))
                 } else if (binding.edLoginEmail.error == null && binding.edLoginPassword.error == null) {

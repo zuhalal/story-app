@@ -2,6 +2,7 @@ package com.zuhal.storyapp.view.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.zuhal.storyapp.R
@@ -32,6 +34,9 @@ class RegisterActivity : AppCompatActivity() {
         val registerViewModel: RegisterViewModel by viewModels { factory }
 
         binding.registerButton.setOnClickListener{
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+
             if (binding.edRegisterEmail.text.toString().isEmpty() || binding.edRegisterPassword.text.toString().isEmpty() || binding.edRegisterName.text.toString().isEmpty()) {
                 showFailedDialog(getString(R.string.invalid_input))
             } else if (binding.edRegisterEmail.error == null && binding.edRegisterName.error == null && binding.edRegisterPassword.error == null) {
