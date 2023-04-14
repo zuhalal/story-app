@@ -22,6 +22,8 @@
     <string name="not_put_the_description">Please insert description first.</string>
     <string name="upload_success">Story uploaded successfully</string>
     <string name="img_item_transition_name">img_item</string>
+    <string name="name_transition_name">name</string>
+    <string name="description_transition_name">description</string>
     <string name="mistake">An error occurred while loading data</string>
     <string name="failed">Failed</string>
     <string name="registration_failed_message">Registration failed.</string>

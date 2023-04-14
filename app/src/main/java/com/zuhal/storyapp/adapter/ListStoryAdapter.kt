@@ -11,7 +11,7 @@ import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ItemRowStoryBinding
 import com.zuhal.storyapp.helper.StoryDiffCallback
 
-class ListStoryAdapter:
+class ListStoryAdapter :
     RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>() {
     private val listStory = ArrayList<Story>()
     private lateinit var onItemClickCallback: OnItemClickCallback
@@ -25,7 +25,13 @@ class ListStoryAdapter:
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: Story, index: Int, sharedImageView: ImageView)
+        fun onItemClicked(
+            data: Story,
+            index: Int,
+            sharedImageView: ImageView,
+            sharedName: TextView,
+            sharedDesc: TextView
+        )
     }
 
     class ListViewHolder(itemView: ItemRowStoryBinding) : RecyclerView.ViewHolder(itemView.root) {
@@ -39,7 +45,8 @@ class ListStoryAdapter:
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        val binding = ItemRowStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemRowStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ListViewHolder(binding)
     }
 
@@ -54,7 +61,9 @@ class ListStoryAdapter:
             onItemClickCallback.onItemClicked(
                 listStory[holder.adapterPosition],
                 holder.adapterPosition,
-                holder.imgPhoto
+                holder.imgPhoto,
+                holder.tvName,
+                holder.tvDescription
             )
         }
     }

@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,6 @@ import com.zuhal.storyapp.view.add.AddStoryActivity
 import com.zuhal.storyapp.view.detail.StoryDetailActivity
 import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -103,14 +103,22 @@ class MainActivity : AppCompatActivity() {
         rvUser.adapter = listUserAdapter
 
         listUserAdapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: Story, index: Int, sharedImageView: ImageView) {
+            override fun onItemClicked(
+                data: Story,
+                index: Int,
+                sharedImageView: ImageView,
+                sharedName: TextView,
+                sharedDesc: TextView
+            ) {
                 val intent = Intent(this@MainActivity, StoryDetailActivity::class.java)
                 intent.putExtra(StoryDetailActivity.EXTRA_USER, data)
 
                 val options: ActivityOptionsCompat =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this@MainActivity,
-                        Pair(sharedImageView, getString(R.string.img_item_transition_name))
+                        Pair(sharedImageView, getString(R.string.img_item_transition_name)),
+                        Pair(sharedName, getString(R.string.name_transition_name)),
+                        Pair(sharedDesc, getString(R.string.description_transition_name))
                     )
                 startActivity(intent, options.toBundle())
             }

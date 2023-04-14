@@ -23,6 +23,8 @@
     <string name="not_put_the_description">Silakan masukan deskripsi terlebih dahulu</string>
     <string name="upload_success">Story berhasil diunggah</string>
     <string name="img_item_transition_name">img_item</string>
+    <string name="name_transition_name">name</string>
+    <string name="description_transition_name">description</string>
     <string name="mistake">Terjadi kesalahan saat memuat data</string>
     <string name="failed">Gagal</string>
     <string name="registration_failed_message">Anda gagal melakukan registrasi.</string>
