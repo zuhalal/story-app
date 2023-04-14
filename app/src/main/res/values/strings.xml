@@ -19,6 +19,7 @@
     <string name="preview_desc">Preview for the picture that will be uploaded</string>
     <string name="add_desc_hint">Enter the description here</string>
     <string name="not_put_the_picture">Please insert picture first.</string>
+    <string name="not_put_the_description">Please insert description first.</string>
     <string name="upload_success">Story uploaded successfully</string>
     <string name="img_item_transition_name">img_item</string>
     <string name="mistake">An error occurred while loading data</string>

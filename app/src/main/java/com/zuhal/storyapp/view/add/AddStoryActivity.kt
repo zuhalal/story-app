@@ -73,7 +73,7 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadImage() {
-        if (getFile != null) {
+        if (getFile != null && binding.descriptionInput.text.isNotEmpty()) {
             val file = reduceFileImage(getFile as File)
 
             val description =
@@ -125,6 +125,12 @@ class AddStoryActivity : AppCompatActivity() {
                 }
             }
 
+        } else if (binding.descriptionInput.text.isEmpty()) {
+            Toast.makeText(
+                this@AddStoryActivity,
+                getString(R.string.not_put_the_description),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             Toast.makeText(
                 this@AddStoryActivity,

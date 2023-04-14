@@ -46,7 +46,7 @@ class StoryUserRepository private constructor(
                         message.value =  Result.Error(msg)
                     }
                 } else {
-                    val msg = response.body()?.message ?: ""
+                    val msg = response.message()
                     message.value =  Result.Error(msg)
                 }
             }
@@ -75,7 +75,7 @@ class StoryUserRepository private constructor(
                         message.value =  Result.Error(msg)
                     }
                 } else {
-                    val msg = response.body()?.message ?: ""
+                    val msg = response.message()
                     message.value =  Result.Error(msg)
                 }
             }
@@ -98,7 +98,11 @@ class StoryUserRepository private constructor(
                     if (response.body()?.error == false) {
                         val listStory = response.body()?.listStory as List<Story>
                         apiResult.value = Result.Success(listStory)
+                    } else {
+                        apiResult.value = Result.Error(response.body()?.message ?: "")
                     }
+                } else {
+                    apiResult.value = Result.Error(response.message())
                 }
             }
 
@@ -129,7 +133,7 @@ class StoryUserRepository private constructor(
                         message.value =  Result.Error(msg)
                     }
                 } else {
-                    val msg = response.body()?.message ?: ""
+                    val msg = response.message()
                     message.value =  Result.Error(msg)
                 }
             }
