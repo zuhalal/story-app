@@ -1,5 +1,6 @@
 package com.zuhal.storyapp.view.detail
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.githubusers.extensions.loadImageCenterCrop
@@ -15,7 +16,11 @@ class StoryDetailActivity : AppCompatActivity() {
         binding = ActivityStoryDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val story = intent.getParcelableExtra<Story>(EXTRA_USER)
+        val story =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(EXTRA_USER, Story::class.java)
+        } else {
+            intent.getParcelableExtra(EXTRA_USER)
+        }
 
         binding.apply {
             imgItemPhoto.loadImageCenterCrop(story?.photoUrl)

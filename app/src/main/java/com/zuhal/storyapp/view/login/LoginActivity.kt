@@ -11,6 +11,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.zuhal.storyapp.R
 import com.zuhal.storyapp.databinding.ActivityLoginBinding
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.view.main.MainActivity
@@ -49,9 +50,9 @@ class LoginActivity : AppCompatActivity() {
                                     is Result.Success -> {
                                         showLoading(false)
                                         AlertDialog.Builder(this).apply {
-                                            setTitle("Sukses")
-                                            setMessage("Anda berhasil login.")
-                                            setPositiveButton("Lanjut") { _, _ ->
+                                            setTitle(getString(R.string.success))
+                                            setMessage(getString(R.string.login_successful_message))
+                                            setPositiveButton(getString(R.string.next)) { _, _ ->
                                                 val intent = Intent(context, MainActivity::class.java)
                                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                                 startActivity(intent)
@@ -64,9 +65,9 @@ class LoginActivity : AppCompatActivity() {
                                     is Result.Error -> {
                                         showLoading(false)
                                         AlertDialog.Builder(this).apply {
-                                            setTitle("Gagal")
-                                            setMessage("Anda gagal login.")
-                                            setPositiveButton("Lanjut") { dialog, _ -> dialog.dismiss() }
+                                            setTitle(getString(R.string.failed))
+                                            setMessage(getString(R.string.login_failed_message))
+                                            setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
                                             create()
                                             show()
                                         }

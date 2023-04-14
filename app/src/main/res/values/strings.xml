@@ -22,4 +22,18 @@
     <string name="not_put_the_picture">Silakan masukkan berkas gambar terlebih dahulu.</string>
     <string name="upload_success">Story berhasil diunggah</string>
     <string name="img_item_transition_name">img_item</string>
+    <string name="mistake">Terjadi kesalahan saat memuat data</string>
+    <string name="failed">Gagal</string>
+    <string name="registration_failed_message">Anda gagal melakukan registrasi.</string>
+    <string name="next">Lanjut</string>
+    <string name="success">Sukses</string>
+    <string name="register_successful_message">Anda berhasil register.</string>
+    <string name="login_failed_message">Anda gagal login.</string>
+    <string name="login_successful_message">Anda berhasil login.</string>
+    <string name="failed_camera">Gagal memunculkan kamera.</string>
+    <string name="failed_picture">Gagal mengambil gambar.</string>
+    <string name="choose_picture">Pilih gambar</string>
+    <string name="bearer">Bearer</string>
+    <string name="welcome_back">Selamat datang kembali, </string>
+    <string name="colon">:</string>
 </resources>

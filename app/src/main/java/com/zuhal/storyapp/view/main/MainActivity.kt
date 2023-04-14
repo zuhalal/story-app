@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         loginViewModel.getUser().observe(this) { user ->
             this.user = user
-            binding.username.text = this.user.name
+            "${getString(R.string.welcome_back)} ${this.user.name}".also { binding.username.text = it }
         }
 
         loginViewModel.getToken().observe(this) { token ->
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 finish()
             } else {
                 rvUser = binding.rvStory
-                mainViewModel.getListStories("Bearer $token").observe(this) { result ->
+                mainViewModel.getListStories("${getString(R.string.bearer)} $token").observe(this) { result ->
                     if (result != null) {
                         when (result) {
                             is Result.Loading -> {
@@ -67,11 +68,11 @@ class MainActivity : AppCompatActivity() {
                             }
                             is Result.Error -> {
                                 showLoading(false)
-//                                Toast.makeText(
-//                                    this,
-//                                    "${getString(R.string.mistake)} ${result.error}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
+                                Toast.makeText(
+                                    this,
+                                    "${getString(R.string.mistake)}${getString(R.string.colon)} ${result.error}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -98,13 +99,12 @@ class MainActivity : AppCompatActivity() {
                 val options: ActivityOptionsCompat =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this@MainActivity,
-                        Pair(sharedImageView, "img_item")
+                        Pair(sharedImageView, getString(R.string.img_item_transition_name))
                     )
                 startActivity(intent, options.toBundle())
             }
         })
     }
-
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        when (item.itemId) {
             R.id.menu_logout -> {
                 val loginViewModel: LoginViewModel by viewModels { factory }
                 loginViewModel.logout()

@@ -78,7 +78,7 @@ class AddStoryActivity : AppCompatActivity() {
 
             loginViewModel.getToken().observe(this) {
                 if (it !== "") {
-                    mainViewModel.postStory(imageMultipart, description, "Bearer $it").observe(this) { result ->
+                    mainViewModel.postStory(imageMultipart, description, "${getString(R.string.bearer)} $it").observe(this) { result ->
                         if (result != null) {
                             when (result) {
                                 is Result.Loading -> {
@@ -187,12 +187,14 @@ class AddStoryActivity : AppCompatActivity() {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        val chooser = Intent.createChooser(intent, getString(R.string.choose_picture))
         launcherIntentGallery.launch(chooser)
     }
 
     companion object {
         const val CAMERA_X_RESULT = 200
+        const val PICTURE_VALUE = "picture"
+        const val IS_BACK_CAMERA_VALUE = "isBackCamera"
 
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10

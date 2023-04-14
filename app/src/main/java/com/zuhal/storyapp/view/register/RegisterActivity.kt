@@ -11,6 +11,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.databinding.ActivityRegisterBinding
 import com.zuhal.storyapp.view.ViewModelFactory
@@ -46,9 +47,9 @@ class RegisterActivity : AppCompatActivity() {
                                 is Result.Success -> {
                                     showLoading(false)
                                     AlertDialog.Builder(this).apply {
-                                        setTitle("Sukses")
-                                        setMessage("Anda berhasil register.")
-                                        setPositiveButton("Lanjut") { _, _ ->
+                                        setTitle(getString(R.string.success))
+                                        setMessage(getString(R.string.register_successful_message))
+                                        setPositiveButton(getString(R.string.next)) { _, _ ->
                                             val intent = Intent(context, LoginActivity::class.java)
                                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                             startActivity(intent)
@@ -61,9 +62,9 @@ class RegisterActivity : AppCompatActivity() {
                                 is Result.Error -> {
                                     showLoading(false)
                                     AlertDialog.Builder(this).apply {
-                                        setTitle("Gagal")
-                                        setMessage("Anda gagal melakukan registrasi.")
-                                        setPositiveButton("Lanjut") { dialog, _ -> dialog.dismiss() }
+                                        setTitle(getString(R.string.failed))
+                                        setMessage(getString(R.string.registration_failed_message))
+                                        setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
                                         create()
                                         show()
                                     }

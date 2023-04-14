@@ -13,6 +13,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.zuhal.storyapp.R
 import com.zuhal.storyapp.databinding.ActivityCameraBinding
 import com.zuhal.storyapp.utils.createFile
 import com.zuhal.storyapp.view.add.AddStoryActivity
@@ -55,16 +56,16 @@ class CameraActivity : AppCompatActivity() {
                 override fun onError(exc: ImageCaptureException) {
                     Toast.makeText(
                         this@CameraActivity,
-                        "Gagal mengambil gambar.",
+                        getString(R.string.failed_picture),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val intent = Intent()
-                    intent.putExtra("picture", photoFile)
+                    intent.putExtra(AddStoryActivity.PICTURE_VALUE, photoFile)
                     intent.putExtra(
-                        "isBackCamera",
+                        AddStoryActivity.IS_BACK_CAMERA_VALUE,
                         cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
                     )
                     setResult(AddStoryActivity.CAMERA_X_RESULT, intent)
@@ -99,7 +100,7 @@ class CameraActivity : AppCompatActivity() {
             } catch (exc: Exception) {
                 Toast.makeText(
                     this@CameraActivity,
-                    "Gagal memunculkan kamera.",
+                    getString(R.string.failed_camera),
                     Toast.LENGTH_SHORT
                 ).show()
             }
