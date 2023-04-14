@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/img_item_photo"
+        android:transitionName="@string/img_item_transition_name"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="center"
@@ -20,18 +21,21 @@
 
     <TextView
         android:id="@+id/name"
+        android:transitionName="@string/name_transition_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/hello_world"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textFontWeight="700"
+        android:textStyle="bold"
+        android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@+id/img_item_photo"
         tools:targetApi="p" />
 
     <TextView
         android:id="@+id/description"
+        android:transitionName="@string/description_transition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

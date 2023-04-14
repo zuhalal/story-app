@@ -25,7 +25,7 @@ class ListStoryAdapter:
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: Story, index: Int)
+        fun onItemClicked(data: Story, index: Int, sharedImageView: ImageView)
     }
 
     class ListViewHolder(itemView: ItemRowStoryBinding) : RecyclerView.ViewHolder(itemView.root) {
@@ -53,7 +53,8 @@ class ListStoryAdapter:
         holder.itemView.setOnClickListener {
             onItemClickCallback.onItemClicked(
                 listStory[holder.adapterPosition],
-                holder.adapterPosition
+                holder.adapterPosition,
+                holder.imgPhoto
             )
         }
     }

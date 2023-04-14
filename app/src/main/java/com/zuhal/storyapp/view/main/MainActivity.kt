@@ -1,25 +1,29 @@
 package com.zuhal.storyapp.view.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.adapter.ListStoryAdapter
+import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.data.UserModel
+import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ActivityMainBinding
 import com.zuhal.storyapp.view.ViewModelFactory
-import com.zuhal.storyapp.view.login.LoginActivity
-import com.zuhal.storyapp.view.login.LoginViewModel
-import com.zuhal.storyapp.data.Result
-import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.view.add.AddStoryActivity
 import com.zuhal.storyapp.view.detail.StoryDetailActivity
+import com.zuhal.storyapp.view.login.LoginActivity
+import com.zuhal.storyapp.view.login.LoginViewModel
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -87,11 +91,16 @@ class MainActivity : AppCompatActivity() {
         rvUser.adapter = listUserAdapter
 
         listUserAdapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: Story, index: Int) {
-//                showSelectedUser(data)
+            override fun onItemClicked(data: Story, index: Int, sharedImageView: ImageView) {
                 val intent = Intent(this@MainActivity, StoryDetailActivity::class.java)
                 intent.putExtra(StoryDetailActivity.EXTRA_USER, data)
-                startActivity(intent)
+
+                val options: ActivityOptionsCompat =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        this@MainActivity,
+                        Pair(sharedImageView, "img_item")
+                    )
+                startActivity(intent, options.toBundle())
             }
         })
     }
