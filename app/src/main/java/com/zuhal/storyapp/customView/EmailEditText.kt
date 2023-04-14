@@ -9,6 +9,7 @@ import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import com.zuhal.storyapp.R
 
 class EmailEditText: AppCompatEditText, View.OnTouchListener {
     constructor(context: Context) : super(context) {
@@ -25,10 +26,9 @@ class EmailEditText: AppCompatEditText, View.OnTouchListener {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // Menambahkan hint pada editText
-        hint = "Masukkan Email Anda"
 
-        // Menambahkan text aligmnet pada editText
+        hint = context.getString(R.string.email_hint)
+
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
@@ -42,9 +42,9 @@ class EmailEditText: AppCompatEditText, View.OnTouchListener {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().trim().isEmpty()) {
-                    error = "Email tidak boleh kosong"
+                    error = context.getString(R.string.empty_email)
                 } else if (!isValidEmail(s)) {
-                    error = "Email harus berupa email yang valid"
+                    error = context.getString(R.string.invalid_email)
                 }
             }
 

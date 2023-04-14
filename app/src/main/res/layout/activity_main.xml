@@ -10,7 +10,10 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world"
+        android:layout_marginTop="8dp"
+        android:text="@string/loading_user"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,8 +22,8 @@
         android:id="@+id/rv_story"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginBottom="28dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         tools:listitem="@layout/item_row_story" />

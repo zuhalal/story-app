@@ -36,4 +36,11 @@
     <string name="bearer">Bearer</string>
     <string name="welcome_back">Selamat datang kembali, </string>
     <string name="colon">:</string>
+    <string name="loading_user">Memuat user...</string>
+    <string name="empty_email">Email tidak boleh kosong</string>
+    <string name="invalid_email">Email harus berupa email yang valid</string>
+    <string name="email_hint">Masukkan Email Anda</string>
+    <string name="password_hint">Masukkan password Anda</string>
+    <string name="password_empty">Password tidak boleh kosong</string>
+    <string name="invalid_password">Password minimal 8 karakter</string>
 </resources>

@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import com.zuhal.storyapp.R
 
 class PasswordEditText: AppCompatEditText, View.OnTouchListener {
     constructor(context: Context) : super(context) {
@@ -24,10 +25,8 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // Menambahkan hint pada editText
-        hint = "Masukkan password Anda"
+        hint = context.getString(R.string.password_hint)
 
-        // Menambahkan text aligmnet pada editText
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
@@ -41,9 +40,9 @@ class PasswordEditText: AppCompatEditText, View.OnTouchListener {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().trim().isEmpty()) {
-                    error = "Password tidak boleh kosong"
-                } else if(s.toString().length <8) {
-                    error = "Password minimal 8 karakter"
+                    error = context.getString(R.string.password_empty)
+                } else if(s.toString().length < 8) {
+                    error = context.getString(R.string.invalid_password)
                 }
             }
 

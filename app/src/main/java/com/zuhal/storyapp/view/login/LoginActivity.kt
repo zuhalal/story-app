@@ -38,7 +38,15 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginButton.setOnClickListener{
             run {
-                if (binding.edLoginEmail.error == null && binding.edLoginPassword.error == null) {
+                if (binding.edLoginEmail.text.toString().isEmpty() || binding.edLoginPassword.text.toString().isEmpty()) {
+                    AlertDialog.Builder(this).apply {
+                        setTitle(getString(R.string.failed))
+                        setMessage(getString(R.string.login_failed_message))
+                        setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
+                        create()
+                        show()
+                    }
+                } else if (binding.edLoginEmail.error == null && binding.edLoginPassword.error == null) {
                     loginViewModel
                         .postLogin(binding.edLoginEmail.text.toString(), binding.edLoginPassword.text.toString())
                         .observe(this) { result ->
