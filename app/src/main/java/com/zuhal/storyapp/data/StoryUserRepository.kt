@@ -8,7 +8,6 @@ import com.zuhal.storyapp.data.remote.retrofit.StoryApiService
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
 import com.zuhal.storyapp.data.remote.models.CommonResponse
-import com.zuhal.storyapp.utils.AppExecutors
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -20,7 +19,6 @@ import okhttp3.RequestBody
 
 class StoryUserRepository private constructor(
     private val apiService: StoryApiService,
-    private val appExecutors: AppExecutors
 ) {
     private val apiResult = MediatorLiveData<Result<List<Story>>>()
     private val message = MediatorLiveData<Result<String>>()
@@ -156,10 +154,9 @@ class StoryUserRepository private constructor(
         private var instance: StoryUserRepository? = null
         fun getInstance(
             apiService: StoryApiService,
-            appExecutors: AppExecutors
         ): StoryUserRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryUserRepository(apiService, appExecutors)
+                instance ?: StoryUserRepository(apiService)
             }.also { instance = it }
     }
 }
