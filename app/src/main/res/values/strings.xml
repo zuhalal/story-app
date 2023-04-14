@@ -46,4 +46,5 @@
     <string name="invalid_input">Make sure all fields are not empty</string>
     <string name="language">Language</string>
     <string name="add_story">Add Story</string>
+    <string name="not_found">No data to display</string>
 </resources>
