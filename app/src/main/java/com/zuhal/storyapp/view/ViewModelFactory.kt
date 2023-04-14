@@ -43,7 +43,7 @@ class ViewModelFactory private constructor(
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
                 instance ?: ViewModelFactory(
-                    Injection.provideStoryRepository(context),
+                    Injection.provideStoryRepository(),
                     SettingPreferences.getInstance(context.dataStore)
                 )
             }.also { instance = it }
