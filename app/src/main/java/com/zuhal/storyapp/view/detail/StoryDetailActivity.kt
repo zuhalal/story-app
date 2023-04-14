@@ -8,7 +8,7 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import com.example.githubusers.extensions.loadImageCenterCrop
+import com.zuhal.storyapp.extensions.loadImageCenterCrop
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ActivityStoryDetailBinding

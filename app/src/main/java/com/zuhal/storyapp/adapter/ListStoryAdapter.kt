@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.githubusers.extensions.loadImageCenterCrop
+import com.zuhal.storyapp.extensions.loadImageCenterCrop
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ItemRowStoryBinding
 import com.zuhal.storyapp.helper.StoryDiffCallback
