@@ -1,20 +1,32 @@
 package com.zuhal.storyapp.view.detail
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
+import androidx.activity.viewModels
 import com.example.githubusers.extensions.loadImageCenterCrop
+import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ActivityStoryDetailBinding
+import com.zuhal.storyapp.view.ViewModelFactory
+import com.zuhal.storyapp.view.add.AddStoryActivity
+import com.zuhal.storyapp.view.login.LoginViewModel
 
 class StoryDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryDetailBinding
+    private lateinit var factory: ViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityStoryDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        factory = ViewModelFactory.getInstance(this)
 
         val story =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(EXTRA_USER, Story::class.java)
@@ -26,6 +38,32 @@ class StoryDetailActivity : AppCompatActivity() {
             imgItemPhoto.loadImageCenterCrop(story?.photoUrl)
             name.text = story?.name ?: ""
             description.text = story?.description ?: ""
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.option_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_logout -> {
+                val loginViewModel: LoginViewModel by viewModels { factory }
+                loginViewModel.logout()
+                return true
+            }
+            R.id.menu_add -> {
+                val intent = Intent(this@StoryDetailActivity, AddStoryActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.menu_language -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                return true
+            }
+            else -> return true
         }
     }
 
