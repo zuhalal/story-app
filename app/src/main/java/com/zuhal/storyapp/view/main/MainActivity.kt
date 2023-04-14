@@ -36,16 +36,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         factory = ViewModelFactory.getInstance(this)
+
         val loginViewModel: LoginViewModel by viewModels { factory }
         val mainViewModel: MainViewModel by viewModels { factory }
-
-        loginViewModel.getUser().observe(this) { user ->
-            this.user = user
-            "${getString(R.string.welcome_back)} ${this.user.name}".also { binding.username.text = it }
-        }
 
         loginViewModel.getToken().observe(this) { token ->
             if (token == "") {
@@ -54,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
+                setContentView(binding.root)
                 rvUser = binding.rvStory
                 mainViewModel.getListStories("${getString(R.string.bearer)} $token").observe(this) { result ->
                     if (result != null) {
@@ -79,6 +75,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        loginViewModel.getUser().observe(this) { user ->
+            this.user = user
+            "${getString(R.string.welcome_back)} ${this.user.name}".also { binding.username.text = it }
         }
     }
 
