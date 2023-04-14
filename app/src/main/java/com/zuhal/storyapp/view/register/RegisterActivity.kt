@@ -32,7 +32,9 @@ class RegisterActivity : AppCompatActivity() {
         val registerViewModel: RegisterViewModel by viewModels { factory }
 
         binding.registerButton.setOnClickListener{
-            if (binding.edRegisterEmail.error == null && binding.edRegisterName.error == null && binding.edRegisterPassword.error == null) {
+            if (binding.edRegisterEmail.text.toString().isEmpty() || binding.edRegisterPassword.text.toString().isEmpty() || binding.edRegisterName.text.toString().isEmpty()) {
+                showFailedDialog(getString(R.string.invalid_input))
+            } else if (binding.edRegisterEmail.error == null && binding.edRegisterName.error == null && binding.edRegisterPassword.error == null) {
                 registerViewModel.postRegister(
                     binding.edRegisterEmail.text.toString(),
                     binding.edRegisterPassword.text.toString(),
@@ -60,19 +62,23 @@ class RegisterActivity : AppCompatActivity() {
                                     }
                                 }
                                 is Result.Error -> {
-                                    showLoading(false)
-                                    AlertDialog.Builder(this).apply {
-                                        setTitle(getString(R.string.failed))
-                                        setMessage(getString(R.string.registration_failed_message))
-                                        setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
-                                        create()
-                                        show()
-                                    }
+                                   showFailedDialog(getString(R.string.registration_failed_message))
                                 }
                             }
                         }
                     }
             }
+        }
+    }
+
+    private fun showFailedDialog(message: String) {
+        showLoading(false)
+        AlertDialog.Builder(this).apply {
+            setTitle(getString(R.string.failed))
+            setMessage(message)
+            setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
+            create()
+            show()
         }
     }
 

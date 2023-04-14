@@ -39,13 +39,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener{
             run {
                 if (binding.edLoginEmail.text.toString().isEmpty() || binding.edLoginPassword.text.toString().isEmpty()) {
-                    AlertDialog.Builder(this).apply {
-                        setTitle(getString(R.string.failed))
-                        setMessage(getString(R.string.login_failed_message))
-                        setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
-                        create()
-                        show()
-                    }
+                    showFailedDialog(getString(R.string.invalid_input))
                 } else if (binding.edLoginEmail.error == null && binding.edLoginPassword.error == null) {
                     loginViewModel
                         .postLogin(binding.edLoginEmail.text.toString(), binding.edLoginPassword.text.toString())
@@ -71,20 +65,24 @@ class LoginActivity : AppCompatActivity() {
                                         }
                                     }
                                     is Result.Error -> {
-                                        showLoading(false)
-                                        AlertDialog.Builder(this).apply {
-                                            setTitle(getString(R.string.failed))
-                                            setMessage(getString(R.string.login_failed_message))
-                                            setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
-                                            create()
-                                            show()
-                                        }
+                                        showFailedDialog(getString(R.string.login_failed_message))
                                     }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun showFailedDialog(message: String) {
+        showLoading(false)
+        AlertDialog.Builder(this).apply {
+            setTitle(getString(R.string.failed))
+            setMessage(message)
+            setPositiveButton(getString(R.string.next)) { dialog, _ -> dialog.dismiss() }
+            create()
+            show()
         }
     }
 
