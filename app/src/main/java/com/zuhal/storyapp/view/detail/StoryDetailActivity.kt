@@ -56,6 +56,7 @@ class StoryDetailActivity : AppCompatActivity() {
             }
             R.id.menu_add -> {
                 val intent = Intent(this@StoryDetailActivity, AddStoryActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 return true
             }

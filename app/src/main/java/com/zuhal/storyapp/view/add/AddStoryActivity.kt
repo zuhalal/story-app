@@ -24,6 +24,7 @@ import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.databinding.ActivityAddStoryBinding
 import com.zuhal.storyapp.utils.createCustomTempFile
+import com.zuhal.storyapp.utils.reduceFileImage
 import com.zuhal.storyapp.utils.uriToFile
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.view.login.LoginViewModel
@@ -73,7 +74,7 @@ class AddStoryActivity : AppCompatActivity() {
 
     private fun uploadImage() {
         if (getFile != null) {
-            val file = getFile as File
+            val file = reduceFileImage(getFile as File)
 
             val description =
                 binding.descriptionInput.text.toString().toRequestBody("text/plain".toMediaType())
@@ -224,6 +225,7 @@ class AddStoryActivity : AppCompatActivity() {
             }
             R.id.menu_add -> {
                 val intent = Intent(this@AddStoryActivity, AddStoryActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 return true
             }
