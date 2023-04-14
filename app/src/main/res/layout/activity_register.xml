@@ -124,7 +124,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
-        app:passwordToggleEnabled="true"
         app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
         <com.zuhal.storyapp.customView.PasswordEditText
@@ -133,7 +132,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
-            app:passwordToggleEnabled="true"
             tools:ignore="SpeakableTextPresentCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
