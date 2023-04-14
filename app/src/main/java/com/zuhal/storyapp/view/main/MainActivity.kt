@@ -50,36 +50,39 @@ class MainActivity : AppCompatActivity() {
                 finish()
             } else {
                 rvUser = binding.rvStory
-                mainViewModel.getListStories("${getString(R.string.bearer)} $token").observe(this) { result ->
-                    if (result != null) {
-                        when (result) {
-                            is Result.Loading -> {
-                                showLoading(true)
-                            }
-                            is Result.Success -> {
-                                showLoading(false)
-                                val data = result.data
+                mainViewModel.getListStories("${getString(R.string.bearer)} $token")
+                    .observe(this) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {
+                                    showLoading(true)
+                                }
+                                is Result.Success -> {
+                                    showLoading(false)
+                                    val data = result.data
 
-                                setListUserData(data)
-                            }
-                            is Result.Error -> {
-                                showLoading(false)
-                                Toast.makeText(
-                                    this,
-                                    "${getString(R.string.mistake)}${getString(R.string.colon)} ${result.error}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    setListUserData(data)
+                                }
+                                is Result.Error -> {
+                                    showLoading(false)
+                                    Toast.makeText(
+                                        this,
+                                        "${getString(R.string.mistake)}${getString(R.string.colon)} ${result.error}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
                     }
-                }
             }
             setContentView(binding.root)
         }
 
         loginViewModel.getUser().observe(this) { user ->
             this.user = user
-            "${getString(R.string.welcome_back)} ${this.user.name}".also { binding.username.text = it }
+            "${getString(R.string.welcome_back)} ${this.user.name}".also {
+                binding.username.text = it
+            }
         }
     }
 

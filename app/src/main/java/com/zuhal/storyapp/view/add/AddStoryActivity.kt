@@ -75,7 +75,8 @@ class AddStoryActivity : AppCompatActivity() {
         if (getFile != null) {
             val file = getFile as File
 
-            val description = binding.descriptionInput.text.toString().toRequestBody("text/plain".toMediaType())
+            val description =
+                binding.descriptionInput.text.toString().toRequestBody("text/plain".toMediaType())
 
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
@@ -86,7 +87,11 @@ class AddStoryActivity : AppCompatActivity() {
 
             loginViewModel.getToken().observe(this) {
                 if (it !== "") {
-                    mainViewModel.postStory(imageMultipart, description, "${getString(R.string.bearer)} $it").observe(this) { result ->
+                    mainViewModel.postStory(
+                        imageMultipart,
+                        description,
+                        "${getString(R.string.bearer)} $it"
+                    ).observe(this) { result ->
                         if (result != null) {
                             when (result) {
                                 is Result.Loading -> {
@@ -100,7 +105,8 @@ class AddStoryActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     val intent = Intent(this, MainActivity::class.java)
-                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                     startActivity(intent)
                                     finish()
                                 }
@@ -119,7 +125,11 @@ class AddStoryActivity : AppCompatActivity() {
             }
 
         } else {
-            Toast.makeText(this@AddStoryActivity, getString(R.string.not_put_the_picture), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@AddStoryActivity,
+                getString(R.string.not_put_the_picture),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

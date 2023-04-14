@@ -33,11 +33,14 @@ class RegisterActivity : AppCompatActivity() {
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val registerViewModel: RegisterViewModel by viewModels { factory }
 
-        binding.registerButton.setOnClickListener{
+        binding.registerButton.setOnClickListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(it.windowToken, 0)
 
-            if (binding.edRegisterEmail.text.toString().isEmpty() || binding.edRegisterPassword.text.toString().isEmpty() || binding.edRegisterName.text.toString().isEmpty()) {
+            if (binding.edRegisterEmail.text.toString()
+                    .isEmpty() || binding.edRegisterPassword.text.toString()
+                    .isEmpty() || binding.edRegisterName.text.toString().isEmpty()
+            ) {
                 showFailedDialog(getString(R.string.invalid_input))
             } else if (binding.edRegisterEmail.error == null && binding.edRegisterName.error == null && binding.edRegisterPassword.error == null) {
                 registerViewModel.postRegister(
@@ -58,7 +61,8 @@ class RegisterActivity : AppCompatActivity() {
                                         setMessage(getString(R.string.register_successful_message))
                                         setPositiveButton(getString(R.string.next)) { _, _ ->
                                             val intent = Intent(context, LoginActivity::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                            intent.flags =
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                             startActivity(intent)
                                             finish()
                                         }
@@ -67,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                                     }
                                 }
                                 is Result.Error -> {
-                                   showFailedDialog(getString(R.string.registration_failed_message))
+                                    showFailedDialog(getString(R.string.registration_failed_message))
                                 }
                             }
                         }
@@ -91,13 +95,17 @@ class RegisterActivity : AppCompatActivity() {
         val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(500)
 
         val name = ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(500)
-        val nameLayout = ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val nameLayout =
+            ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(500)
 
         val email = ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
-        val emailLayout = ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val emailLayout =
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
 
-        val password = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
-        val passwordLayout = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val password =
+            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
+        val passwordLayout =
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
 
         val signup = ObjectAnimator.ofFloat(binding.registerButton, View.ALPHA, 1f).setDuration(500)
 

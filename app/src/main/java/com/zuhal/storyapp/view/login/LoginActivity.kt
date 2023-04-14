@@ -33,21 +33,26 @@ class LoginActivity : AppCompatActivity() {
         val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
         val loginViewModel: LoginViewModel by viewModels { factory }
 
-        binding.registerButton.setOnClickListener{
+        binding.registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
-        binding.loginButton.setOnClickListener{
+        binding.loginButton.setOnClickListener {
             run {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(it.windowToken, 0)
 
-                if (binding.edLoginEmail.text.toString().isEmpty() || binding.edLoginPassword.text.toString().isEmpty()) {
+                if (binding.edLoginEmail.text.toString()
+                        .isEmpty() || binding.edLoginPassword.text.toString().isEmpty()
+                ) {
                     showFailedDialog(getString(R.string.invalid_input))
                 } else if (binding.edLoginEmail.error == null && binding.edLoginPassword.error == null) {
                     loginViewModel
-                        .postLogin(binding.edLoginEmail.text.toString(), binding.edLoginPassword.text.toString())
+                        .postLogin(
+                            binding.edLoginEmail.text.toString(),
+                            binding.edLoginPassword.text.toString()
+                        )
                         .observe(this) { result ->
                             if (result != null) {
                                 when (result) {
@@ -60,8 +65,10 @@ class LoginActivity : AppCompatActivity() {
                                             setTitle(getString(R.string.success))
                                             setMessage(getString(R.string.login_successful_message))
                                             setPositiveButton(getString(R.string.next)) { _, _ ->
-                                                val intent = Intent(context, MainActivity::class.java)
-                                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                val intent =
+                                                    Intent(context, MainActivity::class.java)
+                                                intent.flags =
+                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                                 startActivity(intent)
                                                 finish()
                                             }
@@ -72,9 +79,9 @@ class LoginActivity : AppCompatActivity() {
                                     is Result.Error -> {
                                         showFailedDialog(getString(R.string.login_failed_message))
                                     }
+                                }
                             }
                         }
-                    }
                 }
             }
         }
@@ -95,10 +102,13 @@ class LoginActivity : AppCompatActivity() {
         val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(500)
 
         val email = ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
-        val emailLayout = ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val emailLayout =
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
 
-        val password = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
-        val passwordLayout = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val password =
+            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
+        val passwordLayout =
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
 
         val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(500)
         val or = ObjectAnimator.ofFloat(binding.orText, View.ALPHA, 1f).setDuration(500)

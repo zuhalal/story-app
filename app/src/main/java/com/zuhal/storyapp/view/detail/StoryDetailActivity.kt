@@ -28,7 +28,7 @@ class StoryDetailActivity : AppCompatActivity() {
 
         factory = ViewModelFactory.getInstance(this)
 
-        val story =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val story = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(EXTRA_USER, Story::class.java)
         } else {
             intent.getParcelableExtra(EXTRA_USER)
