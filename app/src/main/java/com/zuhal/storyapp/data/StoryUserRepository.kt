@@ -3,22 +3,24 @@ package com.zuhal.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.google.gson.Gson
 import com.zuhal.storyapp.data.local.entity.StoryEntity
 import com.zuhal.storyapp.data.local.room.StoryDao
-import com.zuhal.storyapp.data.remote.models.Story
-import com.zuhal.storyapp.data.remote.retrofit.StoryApiService
+import com.zuhal.storyapp.data.remote.models.CommonResponse
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
-import com.zuhal.storyapp.data.remote.models.CommonResponse
+import com.zuhal.storyapp.data.remote.models.Story
+import com.zuhal.storyapp.data.remote.retrofit.StoryApiService
 import com.zuhal.storyapp.utils.AppExecutors
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlinx.coroutines.GlobalScope
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
+
 
 class StoryUserRepository private constructor(
     private val apiService: StoryApiService,
@@ -27,6 +29,10 @@ class StoryUserRepository private constructor(
 ) {
     private val apiResult = MediatorLiveData<Result<List<Story>>>()
     private val message = MediatorLiveData<Result<String>>()
+
+    private fun convertErrorResponse(stringRes: String?): CommonResponse {
+        return Gson().fromJson(stringRes, CommonResponse::class.java);
+    }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun postLogin(
@@ -55,8 +61,14 @@ class StoryUserRepository private constructor(
                         message.value = Result.Error(msg)
                     }
                 } else {
-                    val msg = response.message()
-                    message.value = Result.Error(msg)
+                    try {
+                        val jsonRes = convertErrorResponse(response.errorBody()?.string())
+                        val msg = jsonRes.message
+                        message.value = Result.Error(msg)
+                    } catch (e: Exception) {
+                        val msg = response.message()
+                        message.value = Result.Error(msg)
+                    }
                 }
             }
 
@@ -69,8 +81,6 @@ class StoryUserRepository private constructor(
 
     fun postRegister(email: String, password: String, name: String): LiveData<Result<String>> {
         message.value = Result.Loading
-        Log.e("email", email)
-        Log.e("name", name)
         val client = apiService.register(name, email, password)
         client.enqueue(object : Callback<CommonResponse> {
             override fun onResponse(
@@ -88,8 +98,14 @@ class StoryUserRepository private constructor(
                         message.value = Result.Error(msg)
                     }
                 } else {
-                    val msg = response.message()
-                    message.value = Result.Error(msg)
+                    try {
+                        val jsonRes = convertErrorResponse(response.errorBody()?.string())
+                        val msg = jsonRes.message
+                        message.value = Result.Error(msg)
+                    } catch (e: Exception) {
+                        val msg = response.message()
+                        message.value = Result.Error(msg)
+                    }
                 }
             }
 

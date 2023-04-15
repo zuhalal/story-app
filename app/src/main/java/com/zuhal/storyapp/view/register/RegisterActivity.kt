@@ -71,7 +71,11 @@ class RegisterActivity : AppCompatActivity() {
                                     }
                                 }
                                 is Result.Error -> {
-                                    showFailedDialog(getString(R.string.registration_failed_message))
+                                    showFailedDialog(
+                                        if (result.error != "") result.error else getString(
+                                            R.string.registration_failed_message
+                                        )
+                                    )
                                 }
                             }
                         }

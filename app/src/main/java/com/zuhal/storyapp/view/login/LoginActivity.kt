@@ -77,7 +77,11 @@ class LoginActivity : AppCompatActivity() {
                                         }
                                     }
                                     is Result.Error -> {
-                                        showFailedDialog(getString(R.string.login_failed_message))
+                                        showFailedDialog(
+                                            if (result.error != "") result.error else getString(
+                                                R.string.login_failed_message
+                                            )
+                                        )
                                     }
                                 }
                             }
