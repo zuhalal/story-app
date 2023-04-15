@@ -38,6 +38,7 @@
     <string name="bearer">Bearer</string>
     <string name="welcome_back">Welcome back, </string>
     <string name="colon">:</string>
+<<<<<<< Updated upstream
     <string name="loading_user">Loading user…</string>
     <string name="empty_email">Email cannot be empty</string>
     <string name="invalid_email">Email must be a valid email</string>
@@ -49,4 +50,18 @@
     <string name="language">Language</string>
     <string name="add_story">Add Story</string>
     <string name="not_found">No data to display</string>
+=======
+    <string name="loading_user">Memuat user...</string>
+    <string name="empty_email">Email tidak boleh kosong</string>
+    <string name="invalid_email">Email harus berupa email yang valid</string>
+    <string name="email_hint">Masukkan Email Anda</string>
+    <string name="password_hint">Masukkan password Anda</string>
+    <string name="password_empty">Password tidak boleh kosong</string>
+    <string name="invalid_password">Password minimal 8 karakter</string>
+    <string name="invalid_input">Pastikan semua field sudah terisi</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="no_data">No Data</string>
+>>>>>>> Stashed changes
 </resources>
