@@ -46,9 +46,9 @@
     <string name="password_empty">Password cannot be empty</string>
     <string name="invalid_password">Password minimum 8 characters</string>
     <string name="invalid_input">Make sure all fields are not empty</string>
-    <string name="appwidget_text">STORIES</string>
+    <string name="appwidget_text">LIST STORIES</string>
     <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
+    <string name="app_widget_description">This is an app widget to display the list of stories</string>
     <string name="no_data">No Data</string>
     <string name="language">Language</string>
     <string name="add_story">Add Story</string>

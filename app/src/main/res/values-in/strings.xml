@@ -52,6 +52,6 @@
     <string name="not_found">Tidak ada ada untuk ditampilkan</string>
     <string name="appwidget_text">LIST STORY</string>
     <string name="add_widget">Tambah widget</string>
-    <string name="app_widget_description">Ini deskripsi widget</string>
+    <string name="app_widget_description">Ini adalah widget untuk menampilkan daftar stories</string>
     <string name="no_data">Tidak ada data</string>
 </resources>
