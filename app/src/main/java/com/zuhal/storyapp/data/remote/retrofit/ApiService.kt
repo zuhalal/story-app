@@ -8,7 +8,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
-interface StoryApiService {
+interface ApiService {
     @FormUrlEncoded
     @POST("register")
     fun register(

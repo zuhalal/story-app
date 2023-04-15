@@ -10,6 +10,7 @@ import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.widget.addTextChangedListener
 import com.zuhal.storyapp.R
 
 class CustomEditText : AppCompatEditText, View.OnTouchListener {
@@ -48,33 +49,23 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
     private fun init() {
         setOnTouchListener(this)
 
-        addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // Do nothing.
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
-                    if (s.toString().trim().isEmpty()) {
-                        error = context.getString(R.string.empty_email)
-                    } else if (!isValidEmail(s)) {
-                        error = context.getString(R.string.invalid_email)
-                    }
-                } else if (inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
-                    if (s.toString().trim().isEmpty()) {
-                        error = context.getString(R.string.password_empty)
-                    } else if (s.toString().length < 8) {
-                        error = context.getString(R.string.invalid_password)
-                    }
-                } else {
-                    if (s.toString().trim().isEmpty()) {
-                        error = context.getString(R.string.empty_text)
-                    }
+        addTextChangedListener(onTextChanged = { s: CharSequence?, _, _, _ ->
+            if (inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
+                if (s.toString().trim().isEmpty()) {
+                    error = context.getString(R.string.empty_email)
+                } else if (!isValidEmail(s ?: "")) {
+                    error = context.getString(R.string.invalid_email)
                 }
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                // Do nothing.
+            } else if (inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+                if (s.toString().trim().isEmpty()) {
+                    error = context.getString(R.string.password_empty)
+                } else if (s.toString().length < 8) {
+                    error = context.getString(R.string.invalid_password)
+                }
+            } else {
+                if (s.toString().trim().isEmpty()) {
+                    error = context.getString(R.string.empty_text)
+                }
             }
         })
     }

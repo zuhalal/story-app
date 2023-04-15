@@ -8,7 +8,7 @@ import com.zuhal.storyapp.utils.AppExecutors
 
 object Injection {
     fun provideStoryRepository(context: Context): StoryUserRepository {
-        val apiService = RetrofitConfig.getStoryService()
+        val apiService = RetrofitConfig.getApiService()
         val database = StoryDatabase.getInstance(context)
         val dao = database.storyDao()
         val appExecutors = AppExecutors()

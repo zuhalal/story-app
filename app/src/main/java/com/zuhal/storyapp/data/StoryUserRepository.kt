@@ -9,7 +9,7 @@ import com.zuhal.storyapp.data.remote.models.CommonResponse
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
 import com.zuhal.storyapp.data.remote.models.Story
-import com.zuhal.storyapp.data.remote.retrofit.StoryApiService
+import com.zuhal.storyapp.data.remote.retrofit.ApiService
 import com.zuhal.storyapp.utils.AppExecutors
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -22,7 +22,7 @@ import retrofit2.Response
 
 
 class StoryUserRepository private constructor(
-    private val apiService: StoryApiService,
+    private val apiService: ApiService,
     private val storyDao: StoryDao,
     private val appExecutors: AppExecutors
 ) {
@@ -30,7 +30,7 @@ class StoryUserRepository private constructor(
     private val message = MediatorLiveData<Result<String>>()
 
     private fun convertErrorResponse(stringRes: String?): CommonResponse {
-        return Gson().fromJson(stringRes, CommonResponse::class.java);
+        return Gson().fromJson(stringRes, CommonResponse::class.java)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -207,7 +207,7 @@ class StoryUserRepository private constructor(
         @Volatile
         private var instance: StoryUserRepository? = null
         fun getInstance(
-            apiService: StoryApiService,
+            apiService: ApiService,
             dao: StoryDao,
             appExecutors: AppExecutors
         ): StoryUserRepository =

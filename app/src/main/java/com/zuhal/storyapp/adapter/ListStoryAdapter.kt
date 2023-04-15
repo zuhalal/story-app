@@ -34,7 +34,7 @@ class ListStoryAdapter :
         )
     }
 
-    class ListViewHolder(itemView: ItemRowStoryBinding) : RecyclerView.ViewHolder(itemView.root) {
+    inner class ListViewHolder(itemView: ItemRowStoryBinding) : RecyclerView.ViewHolder(itemView.root) {
         var tvName: TextView = itemView.tvName
         var tvDescription: TextView = itemView.tvDescription
         var imgPhoto: ImageView = itemView.imgItemPhoto
