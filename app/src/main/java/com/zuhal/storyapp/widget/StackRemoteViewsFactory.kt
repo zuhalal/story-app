@@ -1,4 +1,4 @@
-package com.zuhal.storyapp
+package com.zuhal.storyapp.widget
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
+import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.local.room.StoryDao
 import com.zuhal.storyapp.data.local.room.StoryDatabase
 import com.zuhal.storyapp.utils.AppExecutors

@@ -1,4 +1,4 @@
-package com.zuhal.storyapp
+package com.zuhal.storyapp.widget
 
 import android.content.Intent
 import android.widget.RemoteViewsService

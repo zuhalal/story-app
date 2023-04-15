@@ -1,4 +1,4 @@
-package com.zuhal.storyapp
+package com.zuhal.storyapp.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -9,6 +9,7 @@ import android.os.Build
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.net.toUri
+import com.zuhal.storyapp.R
 
 class StoryWidget : AppWidgetProvider() {
     companion object {
