@@ -73,7 +73,7 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadImage() {
-        if (getFile != null && binding.descriptionInput.text.isNotEmpty()) {
+        if (getFile != null && binding.descriptionInput.error == null) {
             val file = reduceFileImage(getFile as File)
 
             val description =
@@ -124,17 +124,16 @@ class AddStoryActivity : AppCompatActivity() {
                     }
                 }
             }
-
-        } else if (binding.descriptionInput.text.isEmpty()) {
+        } else if (getFile == null) {
             Toast.makeText(
                 this@AddStoryActivity,
-                getString(R.string.not_put_the_description),
+                getString(R.string.not_put_the_picture),
                 Toast.LENGTH_SHORT
             ).show()
         } else {
             Toast.makeText(
                 this@AddStoryActivity,
-                getString(R.string.not_put_the_picture),
+                getString(R.string.not_put_the_description),
                 Toast.LENGTH_SHORT
             ).show()
         }
