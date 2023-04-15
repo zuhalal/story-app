@@ -35,7 +35,7 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
         hint = when (inputType) {
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS -> context.getString(R.string.email_hint)
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD -> context.getString(R.string.password_hint)
-            else -> hint ?: context.getString(R.string.text_hint)
+            else -> hint
         }
 
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
