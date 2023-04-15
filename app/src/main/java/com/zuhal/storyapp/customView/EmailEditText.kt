@@ -11,7 +11,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import com.zuhal.storyapp.R
 
-class EmailEditText: AppCompatEditText, View.OnTouchListener {
+class EmailEditText : AppCompatEditText, View.OnTouchListener {
     constructor(context: Context) : super(context) {
         init()
     }
@@ -20,7 +20,11 @@ class EmailEditText: AppCompatEditText, View.OnTouchListener {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init()
     }
 

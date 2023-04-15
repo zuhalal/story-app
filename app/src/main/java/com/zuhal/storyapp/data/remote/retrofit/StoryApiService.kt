@@ -1,6 +1,5 @@
 package com.zuhal.storyapp.data.remote.retrofit
 
-import com.zuhal.storyapp.data.remote.models.DetailStoryResponse
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
 import com.zuhal.storyapp.data.remote.models.CommonResponse
@@ -37,7 +36,4 @@ interface StoryApiService {
     fun getAllStories(
         @Header("Authorization") authorization: String
     ): Call<GetAllStoryResponse>
-
-    @GET("stories/{id}")
-    fun getDetailStory(@Path("id") username: String): Call<List<DetailStoryResponse>>
 }

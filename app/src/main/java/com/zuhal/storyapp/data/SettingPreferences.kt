@@ -23,8 +23,8 @@ class SettingPreferences private constructor(private val dataStore: DataStore<Pr
     fun getUser(): Flow<UserModel> {
         return dataStore.data.map { preferences ->
             UserModel(
-                preferences[NAME_KEY] ?:"",
-                preferences[USER_ID_KEY] ?:"",
+                preferences[NAME_KEY] ?: "",
+                preferences[USER_ID_KEY] ?: "",
             )
         }
     }
