@@ -33,8 +33,12 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
         super.onDraw(canvas)
 
         hint = when (inputType) {
-            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS -> context.getString(R.string.email_hint)
-            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD -> context.getString(R.string.password_hint)
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS -> context.getString(
+                R.string.email_hint
+            )
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD -> context.getString(
+                R.string.password_hint
+            )
             else -> hint
         }
 
