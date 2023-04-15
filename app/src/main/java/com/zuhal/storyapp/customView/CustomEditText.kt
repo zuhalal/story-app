@@ -3,6 +3,7 @@ package com.zuhal.storyapp.customView
 import android.content.Context
 import android.graphics.Canvas
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Patterns
@@ -11,7 +12,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import com.zuhal.storyapp.R
 
-class EmailEditText : AppCompatEditText, View.OnTouchListener {
+class CustomEditText : AppCompatEditText, View.OnTouchListener {
     constructor(context: Context) : super(context) {
         init()
     }
@@ -31,7 +32,11 @@ class EmailEditText : AppCompatEditText, View.OnTouchListener {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        hint = context.getString(R.string.email_hint)
+        hint = when (inputType) {
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS -> context.getString(R.string.email_hint)
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD -> context.getString(R.string.password_hint)
+            else -> hint ?: context.getString(R.string.text_hint)
+        }
 
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
@@ -45,10 +50,22 @@ class EmailEditText : AppCompatEditText, View.OnTouchListener {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().trim().isEmpty()) {
-                    error = context.getString(R.string.empty_email)
-                } else if (!isValidEmail(s)) {
-                    error = context.getString(R.string.invalid_email)
+                if (inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS) {
+                    if (s.toString().trim().isEmpty()) {
+                        error = context.getString(R.string.empty_email)
+                    } else if (!isValidEmail(s)) {
+                        error = context.getString(R.string.invalid_email)
+                    }
+                } else if (inputType == InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+                    if (s.toString().trim().isEmpty()) {
+                        error = context.getString(R.string.password_empty)
+                    } else if (s.toString().length < 8) {
+                        error = context.getString(R.string.invalid_password)
+                    }
+                } else {
+                    if (s.toString().trim().isEmpty()) {
+                        error = context.getString(R.string.empty_text)
+                    }
                 }
             }
 

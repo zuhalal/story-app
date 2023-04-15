@@ -42,7 +42,9 @@
     <string name="loading_user">Memuat user…</string>
     <string name="empty_email">Email tidak boleh kosong</string>
     <string name="invalid_email">Email harus berupa email yang valid</string>
+    <string name="empty_text">Teks tidak boleh kosong</string>
     <string name="email_hint">Masukkan Email Anda</string>
+    <string name="text_hint">Masukan teks</string>
     <string name="password_hint">Masukkan password Anda</string>
     <string name="password_empty">Password tidak boleh kosong</string>
     <string name="invalid_password">Password minimal 8 karakter</string>
