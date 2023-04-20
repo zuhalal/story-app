@@ -14,6 +14,7 @@ import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ActivityStoryDetailBinding
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.view.add.AddStoryActivity
+import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
 
 class StoryDetailActivity : AppCompatActivity() {
@@ -27,6 +28,17 @@ class StoryDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         factory = ViewModelFactory.getInstance(this)
+
+        val loginViewModel: LoginViewModel by viewModels { factory }
+
+        loginViewModel.getToken().observe(this) { token ->
+            if (token == "") {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+        }
 
         val story = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(EXTRA_USER, Story::class.java)

@@ -27,6 +27,7 @@ import com.zuhal.storyapp.utils.createCustomTempFile
 import com.zuhal.storyapp.utils.reduceFileImage
 import com.zuhal.storyapp.utils.uriToFile
 import com.zuhal.storyapp.view.ViewModelFactory
+import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
 import com.zuhal.storyapp.view.main.MainActivity
 import com.zuhal.storyapp.view.main.MainViewModel
@@ -61,6 +62,17 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         factory = ViewModelFactory.getInstance(this)
+
+        val loginViewModel: LoginViewModel by viewModels { factory }
+
+        loginViewModel.getToken().observe(this) { token ->
+            if (token == "") {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+        }
 
         binding.cameraButton.setOnClickListener { startTakePhoto() }
         binding.galleryButton.setOnClickListener { startGallery() }
