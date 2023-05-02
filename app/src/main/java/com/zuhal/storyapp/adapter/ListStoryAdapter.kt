@@ -1,32 +1,25 @@
+@file:Suppress("DEPRECATION")
+
 package com.zuhal.storyapp.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.zuhal.storyapp.data.local.entity.StoryEntity
 import com.zuhal.storyapp.extensions.loadImageCenterCrop
-import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ItemRowStoryBinding
-import com.zuhal.storyapp.helper.StoryDiffCallback
 
 class ListStoryAdapter :
-    RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>() {
-    private val listStory = ArrayList<Story>()
+    PagingDataAdapter<StoryEntity, ListStoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
     private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setListUser(listStory: List<Story>) {
-        val diffCallback = StoryDiffCallback(this.listStory, listStory)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.listStory.clear()
-        this.listStory.addAll(listStory)
-        diffResult.dispatchUpdatesTo(this)
-    }
 
     interface OnItemClickCallback {
         fun onItemClicked(
-            data: Story,
+            data: StoryEntity,
             index: Int,
             sharedImageView: ImageView,
             sharedName: TextView,
@@ -34,7 +27,8 @@ class ListStoryAdapter :
         )
     }
 
-    inner class ListViewHolder(itemView: ItemRowStoryBinding) : RecyclerView.ViewHolder(itemView.root) {
+    inner class ListViewHolder(itemView: ItemRowStoryBinding) :
+        RecyclerView.ViewHolder(itemView.root) {
         var tvName: TextView = itemView.tvName
         var tvDescription: TextView = itemView.tvDescription
         var imgPhoto: ImageView = itemView.imgItemPhoto
@@ -51,24 +45,36 @@ class ListStoryAdapter :
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        val story = listStory[position]
+        val story = getItem(position)
 
-        holder.tvName.text = story.name
-        holder.tvDescription.text = story.description
-        holder.imgPhoto.loadImageCenterCrop(story.photoUrl)
+        if (story != null) {
+            holder.tvName.text = story.name
+            holder.tvDescription.text = story.description
+            holder.imgPhoto.loadImageCenterCrop(story.photoUrl)
 
-        holder.itemView.setOnClickListener {
-            onItemClickCallback.onItemClicked(
-                listStory[holder.adapterPosition],
-                holder.adapterPosition,
-                holder.imgPhoto,
-                holder.tvName,
-                holder.tvDescription
-            )
+            holder.itemView.setOnClickListener {
+                getItem(holder.adapterPosition)?.let { it1 ->
+                    onItemClickCallback.onItemClicked(
+                        it1,
+                        holder.adapterPosition,
+                        holder.imgPhoto,
+                        holder.tvName,
+                        holder.tvDescription
+                    )
+                }
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        return listStory.size
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryEntity>() {
+            override fun areItemsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
     }
 }

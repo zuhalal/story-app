@@ -57,4 +57,5 @@
     <string name="not_found">No data to display</string>
     <string name="map_id">e610a4b8a1a7b857</string>
     <string name="maps">Maps</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -3,12 +3,11 @@ package com.zuhal.storyapp.view.main
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -17,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.adapter.ListStoryAdapter
-import com.zuhal.storyapp.data.Result
+import com.zuhal.storyapp.adapter.LoadingStateAdapter
 import com.zuhal.storyapp.data.UserModel
-import com.zuhal.storyapp.data.remote.models.Story
+import com.zuhal.storyapp.data.local.entity.StoryEntity
 import com.zuhal.storyapp.databinding.ActivityMainBinding
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.view.add.AddStoryActivity
@@ -43,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         val loginViewModel: LoginViewModel by viewModels { factory }
         val mainViewModel: MainViewModel by viewModels { factory }
 
+        rvUser = binding.rvStory
+        rvUser.setHasFixedSize(true)
+        rvUser.layoutManager = LinearLayoutManager(this)
+
         loginViewModel.getToken().observe(this) { token ->
             if (token == "") {
                 val intent = Intent(this, LoginActivity::class.java)
@@ -50,35 +53,51 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
-                rvUser = binding.rvStory
+                val adapter = ListStoryAdapter()
+                rvUser.adapter = adapter.withLoadStateFooter(
+                    footer = LoadingStateAdapter {
+                        adapter.retry()
+                    }
+                )
+
                 mainViewModel.getListStories("${getString(R.string.bearer)} $token")
                     .observe(this) { result ->
                         if (result != null) {
-                            when (result) {
-                                is Result.Loading -> {
-                                    showLoading(true)
-                                    showNotFoundMessage(false)
-                                }
-                                is Result.Success -> {
-                                    showLoading(false)
-                                    val data = result.data
+                            Log.d("adasd", result.toString())
+                            adapter.submitData(lifecycle, result)
 
-                                    if (data.isEmpty()) {
-                                        showNotFoundMessage(true)
-                                    }
+                            adapter.setOnItemClickCallback(object :
+                                ListStoryAdapter.OnItemClickCallback {
+                                override fun onItemClicked(
+                                    data: StoryEntity,
+                                    index: Int,
+                                    sharedImageView: ImageView,
+                                    sharedName: TextView,
+                                    sharedDesc: TextView
+                                ) {
+                                    val intent =
+                                        Intent(this@MainActivity, StoryDetailActivity::class.java)
+                                    intent.putExtra(StoryDetailActivity.EXTRA_USER, data)
 
-                                    setListUserData(data)
+                                    val options: ActivityOptionsCompat =
+                                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                            this@MainActivity,
+                                            Pair(
+                                                sharedImageView,
+                                                getString(R.string.img_item_transition_name)
+                                            ),
+                                            Pair(
+                                                sharedName,
+                                                getString(R.string.name_transition_name)
+                                            ),
+                                            Pair(
+                                                sharedDesc,
+                                                getString(R.string.description_transition_name)
+                                            )
+                                        )
+                                    startActivity(intent, options.toBundle())
                                 }
-                                is Result.Error -> {
-                                    showLoading(false)
-                                    showNotFoundMessage(true)
-                                    Toast.makeText(
-                                        this,
-                                        "${getString(R.string.mistake)}${getString(R.string.colon)} ${result.error}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
+                            })
                         }
                     }
             }
@@ -93,46 +112,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setListUserData(listUser: List<Story>) {
-        rvUser.setHasFixedSize(true)
-        rvUser.layoutManager = LinearLayoutManager(this)
-        rvUser.setHasFixedSize(true)
-
-        val listUserAdapter = ListStoryAdapter()
-        listUserAdapter.setListUser(listUser)
-
-        rvUser.adapter = listUserAdapter
-
-        listUserAdapter.setOnItemClickCallback(object : ListStoryAdapter.OnItemClickCallback {
-            override fun onItemClicked(
-                data: Story,
-                index: Int,
-                sharedImageView: ImageView,
-                sharedName: TextView,
-                sharedDesc: TextView
-            ) {
-                val intent = Intent(this@MainActivity, StoryDetailActivity::class.java)
-                intent.putExtra(StoryDetailActivity.EXTRA_USER, data)
-
-                val options: ActivityOptionsCompat =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        this@MainActivity,
-                        Pair(sharedImageView, getString(R.string.img_item_transition_name)),
-                        Pair(sharedName, getString(R.string.name_transition_name)),
-                        Pair(sharedDesc, getString(R.string.description_transition_name))
-                    )
-                startActivity(intent, options.toBundle())
-            }
-        })
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun showNotFoundMessage(show: Boolean) {
-        binding.notFound.visibility = if (show) View.VISIBLE else View.GONE
-    }
+//    private fun showLoading(isLoading: Boolean) {
+//        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+//    }
+//
+//    private fun showNotFoundMessage(show: Boolean) {
+//        binding.notFound.visibility = if (show) View.VISIBLE else View.GONE
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater

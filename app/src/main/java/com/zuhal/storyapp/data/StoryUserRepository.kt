@@ -2,9 +2,11 @@ package com.zuhal.storyapp.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.paging.*
 import com.google.gson.Gson
 import com.zuhal.storyapp.data.local.entity.StoryEntity
 import com.zuhal.storyapp.data.local.room.StoryDao
+import com.zuhal.storyapp.data.local.room.StoryDatabase
 import com.zuhal.storyapp.data.remote.models.CommonResponse
 import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
 import com.zuhal.storyapp.data.remote.models.LoginResponse
@@ -20,13 +22,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class StoryUserRepository private constructor(
     private val apiService: ApiService,
     private val storyDao: StoryDao,
-    private val appExecutors: AppExecutors
+    private val appExecutors: AppExecutors,
+    private val database: StoryDatabase
 ) {
-    private val apiResult = MediatorLiveData<Result<List<Story>>>()
+//    private val apiResult = MediatorLiveData<Result<List<Story>>>()
     private val apiLocationResult = MediatorLiveData<Result<List<Story>>>()
 
     private val message = MediatorLiveData<Result<String>>()
@@ -117,11 +119,18 @@ class StoryUserRepository private constructor(
         return message
     }
 
-    fun getListStory(token: String): LiveData<Result<List<Story>>> {
-        apiResult.value = Result.Loading
-
-
-        return apiResult
+    fun getListStory(token: String):
+            LiveData<PagingData<StoryEntity>> {
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            remoteMediator = StoryRemoteMediator(database, apiService, token),
+            pagingSourceFactory = {
+                database.storyDao().getStories()
+            }
+        ).liveData
     }
 
     fun getListStoryLocation(token: String): LiveData<Result<List<Story>>> {
@@ -218,10 +227,11 @@ class StoryUserRepository private constructor(
         fun getInstance(
             apiService: ApiService,
             dao: StoryDao,
-            appExecutors: AppExecutors
+            appExecutors: AppExecutors,
+            database: StoryDatabase
         ): StoryUserRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryUserRepository(apiService, dao, appExecutors)
+                instance ?: StoryUserRepository(apiService, dao, appExecutors, database)
             }.also { instance = it }
     }
 }

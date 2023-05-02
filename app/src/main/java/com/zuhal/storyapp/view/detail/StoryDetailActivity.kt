@@ -10,6 +10,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import com.zuhal.storyapp.extensions.loadImageCenterCrop
 import com.zuhal.storyapp.R
+import com.zuhal.storyapp.data.local.entity.StoryEntity
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ActivityStoryDetailBinding
 import com.zuhal.storyapp.view.ViewModelFactory
@@ -41,7 +42,7 @@ class StoryDetailActivity : AppCompatActivity() {
         }
 
         val story = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(EXTRA_USER, Story::class.java)
+            intent.getParcelableExtra(EXTRA_USER, StoryEntity::class.java)
         } else {
             intent.getParcelableExtra(EXTRA_USER)
         }
