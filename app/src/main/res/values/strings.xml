@@ -55,4 +55,6 @@
     <string name="language">Language</string>
     <string name="add_story">Add Story</string>
     <string name="not_found">No data to display</string>
+    <string name="map_id">e610a4b8a1a7b857</string>
+    <string name="maps">Maps</string>
 </resources>

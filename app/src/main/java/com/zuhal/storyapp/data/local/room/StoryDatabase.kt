@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.zuhal.storyapp.data.local.entity.StoryEntity
 
-@Database(entities = [StoryEntity::class], version = 1, exportSchema = false)
+@Database(entities = [StoryEntity::class], version = 2, exportSchema = false)
 abstract class StoryDatabase : RoomDatabase() {
     abstract fun storyDao(): StoryDao
 

@@ -27,6 +27,8 @@ class StoryUserRepository private constructor(
     private val appExecutors: AppExecutors
 ) {
     private val apiResult = MediatorLiveData<Result<List<Story>>>()
+    private val apiLocationResult = MediatorLiveData<Result<List<Story>>>()
+
     private val message = MediatorLiveData<Result<String>>()
 
     private fun convertErrorResponse(stringRes: String?): CommonResponse {
@@ -157,6 +159,50 @@ class StoryUserRepository private constructor(
         })
 
         return apiResult
+    }
+
+    fun getListStoryLocation(token: String): LiveData<Result<List<Story>>> {
+        apiLocationResult.value = Result.Loading
+        val client = apiService.getAllStoriesWithLocation(token)
+        client.enqueue(object : Callback<GetAllStoryResponse> {
+            override fun onResponse(
+                call: Call<GetAllStoryResponse>,
+                response: Response<GetAllStoryResponse>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.body()?.error == false) {
+                        val listStory = response.body()?.listStory as List<Story>
+                        val stories = ArrayList<StoryEntity>()
+                        appExecutors.diskIO.execute {
+                            listStory.forEach { story ->
+                                val storyEntity = StoryEntity(
+                                    story.id,
+                                    story.photoUrl,
+                                    story.createdAt,
+                                    story.name,
+                                    story.description
+                                )
+                                stories.add(storyEntity)
+                            }
+                            storyDao.deleteAllStories()
+                            storyDao.insert(stories)
+                        }
+
+                        apiLocationResult.value = Result.Success(listStory)
+                    } else {
+                        apiLocationResult.value = Result.Error(response.body()?.message ?: "")
+                    }
+                } else {
+                    apiLocationResult.value = Result.Error(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<GetAllStoryResponse>, t: Throwable) {
+                apiLocationResult.value = Result.Error(t.message.toString())
+            }
+        })
+
+        return apiLocationResult
     }
 
     fun postStory(

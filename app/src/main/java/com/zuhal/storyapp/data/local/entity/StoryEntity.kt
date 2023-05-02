@@ -14,6 +14,6 @@ data class StoryEntity(
     val createdAt: String,
     val name: String,
     val description: String,
-    val lat: Double,
-    val lon: Double,
+    val lat: Double? = null,
+    val lon: Double? = null,
 ) : Parcelable

@@ -11,6 +11,7 @@ import com.zuhal.storyapp.data.StoryUserRepository
 import com.zuhal.storyapp.di.Injection
 import com.zuhal.storyapp.view.login.LoginViewModel
 import com.zuhal.storyapp.view.main.MainViewModel
+import com.zuhal.storyapp.view.maps.MapsViewModel
 import com.zuhal.storyapp.view.register.RegisterViewModel
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -24,6 +25,10 @@ class ViewModelFactory private constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             return MainViewModel(storyUserRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
+            return MapsViewModel(storyUserRepository) as T
         }
 
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {

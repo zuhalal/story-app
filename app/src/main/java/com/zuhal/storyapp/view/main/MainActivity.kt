@@ -26,6 +26,7 @@ import com.zuhal.storyapp.view.add.AddStoryActivity
 import com.zuhal.storyapp.view.detail.StoryDetailActivity
 import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
+import com.zuhal.storyapp.view.maps.MapsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -154,6 +155,12 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.menu_language -> {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                return true
+            }
+            R.id.menu_maps -> {
+                val intent = Intent(this@MainActivity, MapsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
                 return true
             }
             else -> return true

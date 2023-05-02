@@ -15,4 +15,9 @@
         android:title="@string/language"
         android:icon = "@drawable/ic_baseline_settings_24"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/menu_maps"
+        android:title="@string/maps"
+        android:icon = "@drawable/ic_baseline_location_on_24"
+        app:showAsAction="ifRoom" />
 </menu>
