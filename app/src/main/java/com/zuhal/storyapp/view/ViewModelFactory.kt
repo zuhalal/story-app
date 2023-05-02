@@ -14,7 +14,7 @@ import com.zuhal.storyapp.view.main.MainViewModel
 import com.zuhal.storyapp.view.maps.MapsViewModel
 import com.zuhal.storyapp.view.register.RegisterViewModel
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class ViewModelFactory private constructor(
     private val storyUserRepository: StoryUserRepository,

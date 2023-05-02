@@ -1,5 +1,6 @@
 package com.zuhal.storyapp.data.local.room
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -9,7 +10,7 @@ import com.zuhal.storyapp.data.local.entity.StoryEntity
 @Dao
 interface StoryDao {
     @Query("SELECT * FROM story")
-    fun getStories(): List<StoryEntity>
+    fun getStories(): PagingSource<Int, StoryEntity>
 
     @Query("DELETE FROM story")
     fun deleteAllStories()

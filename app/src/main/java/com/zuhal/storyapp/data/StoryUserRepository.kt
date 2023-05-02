@@ -119,44 +119,7 @@ class StoryUserRepository private constructor(
 
     fun getListStory(token: String): LiveData<Result<List<Story>>> {
         apiResult.value = Result.Loading
-        val client = apiService.getAllStories(token)
-        client.enqueue(object : Callback<GetAllStoryResponse> {
-            override fun onResponse(
-                call: Call<GetAllStoryResponse>,
-                response: Response<GetAllStoryResponse>
-            ) {
-                if (response.isSuccessful) {
-                    if (response.body()?.error == false) {
-                        val listStory = response.body()?.listStory as List<Story>
-                        val stories = ArrayList<StoryEntity>()
-                        appExecutors.diskIO.execute {
-                            listStory.forEach { story ->
-                                val storyEntity = StoryEntity(
-                                    story.id,
-                                    story.photoUrl,
-                                    story.createdAt,
-                                    story.name,
-                                    story.description
-                                )
-                                stories.add(storyEntity)
-                            }
-                            storyDao.deleteAllStories()
-                            storyDao.insert(stories)
-                        }
 
-                        apiResult.value = Result.Success(listStory)
-                    } else {
-                        apiResult.value = Result.Error(response.body()?.message ?: "")
-                    }
-                } else {
-                    apiResult.value = Result.Error(response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<GetAllStoryResponse>, t: Throwable) {
-                apiResult.value = Result.Error(t.message.toString())
-            }
-        })
 
         return apiResult
     }
