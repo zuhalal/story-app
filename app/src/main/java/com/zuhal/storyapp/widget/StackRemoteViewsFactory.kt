@@ -28,7 +28,7 @@ class StackRemoteViewsFactory(private val mContext: Context) :
         val identityToken = Binder.clearCallingIdentity()
 
         appExecutors.diskIO.execute {
-            val stories = dao.getStories()
+            val stories = dao.getStoriesList()
 
             stories.map { story ->
                 val bitmap = Glide.with(mContext)
