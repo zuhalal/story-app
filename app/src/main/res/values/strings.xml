@@ -58,4 +58,6 @@
     <string name="map_id">e610a4b8a1a7b857</string>
     <string name="maps">Maps</string>
     <string name="retry">Retry</string>
+    <string name="location_switch">Use my current location</string>
+    <string name="location_not_found">Location is not found. Try Again</string>
 </resources>

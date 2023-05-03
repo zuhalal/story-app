@@ -29,7 +29,7 @@ class StoryUserRepository private constructor(
     private val appExecutors: AppExecutors,
     private val database: StoryDatabase
 ) {
-//    private val apiResult = MediatorLiveData<Result<List<Story>>>()
+    //    private val apiResult = MediatorLiveData<Result<List<Story>>>()
     private val apiLocationResult = MediatorLiveData<Result<List<Story>>>()
 
     private val message = MediatorLiveData<Result<String>>()
@@ -182,10 +182,18 @@ class StoryUserRepository private constructor(
     fun postStory(
         image: MultipartBody.Part,
         description: RequestBody,
-        token: String
+        token: String,
+        long: RequestBody?,
+        lat: RequestBody?
     ): LiveData<Result<String>> {
         message.value = Result.Loading
-        val service = apiService.postStories(description, image, token)
+        val service = if (long != null && lat != null) apiService.postStories(
+            description,
+            image,
+            token,
+            long,
+            lat
+        ) else apiService.postStories(description, image, token)
         service.enqueue(object : Callback<CommonResponse> {
             override fun onResponse(
                 call: Call<CommonResponse>,

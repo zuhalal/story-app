@@ -3,23 +3,28 @@ package com.zuhal.storyapp.view.add
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.android.gms.common.api.ResolvableApiException
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.Result
 import com.zuhal.storyapp.databinding.ActivityAddStoryBinding
@@ -37,13 +42,19 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import com.google.android.gms.location.*
+import java.util.concurrent.TimeUnit
 
 class AddStoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddStoryBinding
     private lateinit var currentPhotoPath: String
     private lateinit var factory: ViewModelFactory
+    private lateinit var myLocation: Location
     private var getFile: File? = null
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val mainViewModel: MainViewModel by viewModels { factory }
     private val loginViewModel: LoginViewModel by viewModels { factory }
 
@@ -82,6 +93,11 @@ class AddStoryActivity : AppCompatActivity() {
 
             uploadImage()
         }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        getMyLastLocation()
+        createLocationRequest()
     }
 
     private fun uploadImage() {
@@ -100,37 +116,31 @@ class AddStoryActivity : AppCompatActivity() {
 
             loginViewModel.getToken().observe(this) {
                 if (it !== "") {
-                    mainViewModel.postStory(
-                        imageMultipart,
-                        description,
-                        "${getString(R.string.bearer)} $it"
-                    ).observe(this) { result ->
-                        if (result != null) {
-                            when (result) {
-                                is Result.Loading -> {
-                                    showLoading(true)
-                                }
-                                is Result.Success -> {
-                                    showLoading(false)
-                                    Toast.makeText(
-                                        this,
-                                        getString(R.string.upload_success),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    intent.flags =
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                is Result.Error -> {
-                                    showLoading(false)
-                                    Toast.makeText(
-                                        this,
-                                        result.error,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                    if (binding.locationSwitch.isChecked) {
+                        val requestLat =
+                            myLocation.latitude.toString().toRequestBody("text/plain".toMediaType())
+                        val requestLong = myLocation.longitude.toString()
+                            .toRequestBody("text/plain".toMediaType())
+
+                        mainViewModel.postStory(
+                            imageMultipart,
+                            description,
+                            "${getString(R.string.bearer)} $it",
+                            requestLong,
+                            requestLat
+                        ).observe(this) { result ->
+                            if (result != null) {
+                                uploadResult(result)
+                            }
+                        }
+                    } else {
+                        mainViewModel.postStory(
+                            imageMultipart,
+                            description,
+                            "${getString(R.string.bearer)} $it"
+                        ).observe(this) { result ->
+                            if (result != null) {
+                                uploadResult(result)
                             }
                         }
                     }
@@ -150,6 +160,130 @@ class AddStoryActivity : AppCompatActivity() {
             ).show()
         }
     }
+
+    private fun uploadResult(result: Result<String>) {
+        return when (result) {
+            is Result.Loading -> {
+                showLoading(true)
+            }
+            is Result.Success -> {
+                showLoading(false)
+                Toast.makeText(
+                    this,
+                    getString(R.string.upload_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags =
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+            is Result.Error -> {
+                showLoading(false)
+                Toast.makeText(
+                    this,
+                    result.error,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    // Precise location access granted.
+                    getMyLastLocation()
+                }
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    // Only approximate location access granted.
+                    getMyLastLocation()
+                }
+                else -> {
+                    // No location access granted.
+                }
+            }
+        }
+
+    private fun getMyLastLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    myLocation = location
+                } else {
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        getString(R.string.location_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest.create().apply {
+            interval = TimeUnit.SECONDS.toMillis(1)
+            maxWaitTime = TimeUnit.SECONDS.toMillis(1)
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+        val client: SettingsClient = LocationServices.getSettingsClient(this)
+        client.checkLocationSettings(builder.build())
+            .addOnSuccessListener {
+                getMyLastLocation()
+            }
+            .addOnFailureListener { exception ->
+                if (exception is ResolvableApiException) {
+                    try {
+                        resolutionLauncher.launch(
+                            IntentSenderRequest.Builder(exception.resolution).build()
+                        )
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                        Toast.makeText(this@AddStoryActivity, sendEx.message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+    }
+
+    private val resolutionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartIntentSenderForResult()
+        ) { result ->
+            when (result.resultCode) {
+                RESULT_OK ->
+                    Log.i("ABC", "onActivityResult: All location settings are satisfied.")
+                RESULT_CANCELED ->
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        "Anda harus mengaktifkan GPS untuk menggunakan aplikasi ini!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+            }
+        }
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

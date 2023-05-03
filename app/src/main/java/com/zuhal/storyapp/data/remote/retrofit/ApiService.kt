@@ -30,7 +30,9 @@ interface ApiService {
     fun postStories(
         @Part("description") description: RequestBody,
         @Part file: MultipartBody.Part,
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
+        @Part("lon") lon: RequestBody? = null,
+        @Part("lat") lat: RequestBody? = null,
     ): Call<CommonResponse>
 
     @GET("stories")
