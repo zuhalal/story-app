@@ -1,10 +1,10 @@
 package com.zuhal.storyapp.view.login
 
-import android.view.View
+import android.content.Context
+import android.content.res.Resources
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -12,24 +12,24 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.zuhal.storyapp.R
+import com.zuhal.storyapp.data.remote.retrofit.RetrofitConfig
+import com.zuhal.storyapp.utils.EspressoIdlingResource
+import com.zuhal.storyapp.utils.JsonConverter
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.zuhal.storyapp.utils.EspressoIdlingResource
-import okhttp3.mockwebserver.MockWebServer
-import com.zuhal.storyapp.R
-import com.zuhal.storyapp.data.remote.retrofit.RetrofitConfig
-import com.zuhal.storyapp.utils.JsonConverter
-import com.zuhal.storyapp.view.main.MainActivity
-import okhttp3.mockwebserver.MockResponse
-import org.hamcrest.Matcher
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class LoginActivityTest {
     private val mockWebServer = MockWebServer()
+    private val targetContext = ApplicationProvider.getApplicationContext<Context>()
+    private val resources: Resources = targetContext.resources
 
     @get:Rule
     val activity = ActivityScenarioRule(LoginActivity::class.java)
@@ -53,24 +53,17 @@ class LoginActivityTest {
 
         onView(withId(R.id.loginButton)).perform(click())
 
-        onView(withText("Lanjut")).perform(click())
+        onView(withText(resources.getString(R.string.next))).perform(click())
 
         onView(withId(R.id.username)).check(matches(isDisplayed()))
+        onView(withId(R.id.menu_logout)).perform(click())
+
+        onView(withId(R.id.ed_login_email)).check(matches(isDisplayed()))
     }
 
     @After
     fun tearDown() {
         mockWebServer.shutdown()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-    }
-}
-
-private fun waitFor(delay: Long): ViewAction? {
-    return object : ViewAction {
-        override fun getConstraints(): Matcher<View> = isRoot()
-        override fun getDescription(): String = "wait for $delay milliseconds"
-        override fun perform(uiController: UiController, v: View?) {
-            uiController.loopMainThreadForAtLeast(delay)
-        }
     }
 }

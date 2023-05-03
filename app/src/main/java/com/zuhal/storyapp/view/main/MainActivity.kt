@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.getListStories("${getString(R.string.bearer)} $token")
                     .observe(this) { result ->
                         if (result != null) {
-                            Log.d("adasd", result.toString())
                             adapter.submitData(lifecycle, result)
 
                             adapter.setOnItemClickCallback(object :
