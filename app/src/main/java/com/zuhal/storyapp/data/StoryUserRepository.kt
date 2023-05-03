@@ -1,5 +1,6 @@
 package com.zuhal.storyapp.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.paging.*
@@ -121,12 +122,13 @@ class StoryUserRepository private constructor(
 
     fun getListStory(token: String):
             LiveData<PagingData<StoryEntity>> {
+        Log.d("MASUK RePo", "sadasd")
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 5
             ),
-            remoteMediator = StoryRemoteMediator(database, apiService, token),
+            remoteMediator = StoryRemoteMediator(database, apiService, token, appExecutors),
             pagingSourceFactory = {
                 database.storyDao().getStories()
             }

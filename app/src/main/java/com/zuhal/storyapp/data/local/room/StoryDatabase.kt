@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.zuhal.storyapp.data.local.entity.RemoteKeysEntity
 import com.zuhal.storyapp.data.local.entity.StoryEntity
 
-@Database(entities = [StoryEntity::class], version = 2, exportSchema = false)
+@Database(entities = [StoryEntity::class, RemoteKeysEntity::class], version = 3, exportSchema = false)
 abstract class StoryDatabase : RoomDatabase() {
     abstract fun storyDao(): StoryDao
+    abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
         @Volatile

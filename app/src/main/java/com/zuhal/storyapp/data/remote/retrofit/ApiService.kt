@@ -6,6 +6,7 @@ import com.zuhal.storyapp.data.remote.models.CommonResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
@@ -33,7 +34,7 @@ interface ApiService {
     ): Call<CommonResponse>
 
     @GET("stories")
-    fun getAllStories(
+    suspend fun getAllStories(
         @Header("Authorization") authorization: String,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null
