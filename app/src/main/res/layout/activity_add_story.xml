@@ -98,6 +98,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:text="@string/location_switch"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -111,6 +113,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toTopOf="@+id/uploadButton"
             app:layout_constraintStart_toEndOf="@+id/locationTextView"
             app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout" />
