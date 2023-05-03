@@ -3,6 +3,7 @@ package com.zuhal.storyapp.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.liveData
 import androidx.paging.*
 import com.google.gson.Gson
 import com.zuhal.storyapp.data.local.entity.StoryEntity
@@ -30,7 +31,6 @@ class StoryUserRepository private constructor(
     private val appExecutors: AppExecutors,
     private val database: StoryDatabase
 ) {
-    //    private val apiResult = MediatorLiveData<Result<List<Story>>>()
     private val apiLocationResult = MediatorLiveData<Result<List<Story>>>()
 
     private val message = MediatorLiveData<Result<String>>()
@@ -44,47 +44,31 @@ class StoryUserRepository private constructor(
         email: String,
         password: String,
         pref: SettingPreferences
-    ): LiveData<Result<String>> {
-        message.value = Result.Loading
+    ): LiveData<Result<String>> = liveData {
+        emit(Result.Loading)
 
         wrapEspressoIdlingResource {
-            val client = apiService.login(email, password)
-            client.enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        if (body?.error == false) {
-                            val user = UserModel(body.loginResult.name, body.loginResult.userId)
+            try {
+                val response = apiService.login(email, password)
 
-                            GlobalScope.launch {
-                                pref.saveTokenSetting(body.loginResult.token)
-                                pref.saveUser(user)
-                            }
+                if (!response.error) {
+                    val user = UserModel(response.loginResult.name, response.loginResult.userId)
 
-                            val msg = response.body()?.message ?: ""
-                            message.value = Result.Success(msg)
-                        } else {
-                            val msg = response.body()?.message ?: ""
-                            message.value = Result.Error(msg)
-                        }
-                    } else {
-                        try {
-                            val jsonRes = convertErrorResponse(response.errorBody()?.string())
-                            val msg = jsonRes.message
-                            message.value = Result.Error(msg)
-                        } catch (e: Exception) {
-                            val msg = response.message()
-                            message.value = Result.Error(msg)
-                        }
+                    GlobalScope.launch {
+                        pref.saveTokenSetting(response.loginResult.token)
+                        pref.saveUser(user)
                     }
-                }
 
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    message.value = Result.Error(t.message.toString())
+                    val msg = response.message
+                    emit(Result.Success(msg))
+                } else {
+                    val msg = response.message
+                    emit(Result.Error(msg))
                 }
-            })
+            } catch (e: Exception) {
+                emit(Result.Error(e.message.toString()))
+            }
         }
-        return message
     }
 
     fun postRegister(email: String, password: String, name: String): LiveData<Result<String>> {

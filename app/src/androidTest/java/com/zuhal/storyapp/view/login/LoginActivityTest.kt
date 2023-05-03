@@ -32,7 +32,7 @@ class LoginActivityTest {
     private val mockWebServer = MockWebServer()
 
     @get:Rule
-    val activity = ActivityScenarioRule(MainActivity::class.java)
+    val activity = ActivityScenarioRule(LoginActivity::class.java)
 
     @Before
     fun setUp() {
@@ -53,9 +53,9 @@ class LoginActivityTest {
 
         onView(withId(R.id.loginButton)).perform(click())
 
-        onView(isRoot()).perform(waitFor(3000))
+        onView(withText("Lanjut")).perform(click())
 
-//        onView(withId(R.id.username)).check(matches(isDisplayed()))
+        onView(withId(R.id.username)).check(matches(isDisplayed()))
     }
 
     @After
