@@ -14,6 +14,7 @@ import com.zuhal.storyapp.data.remote.models.LoginResponse
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.data.remote.retrofit.ApiService
 import com.zuhal.storyapp.utils.AppExecutors
+import com.zuhal.storyapp.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -45,41 +46,44 @@ class StoryUserRepository private constructor(
         pref: SettingPreferences
     ): LiveData<Result<String>> {
         message.value = Result.Loading
-        val client = apiService.login(email, password)
-        client.enqueue(object : Callback<LoginResponse> {
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    if (body?.error == false) {
-                        val user = UserModel(body.loginResult.name, body.loginResult.userId)
 
-                        GlobalScope.launch {
-                            pref.saveTokenSetting(body.loginResult.token)
-                            pref.saveUser(user)
+        wrapEspressoIdlingResource {
+            val client = apiService.login(email, password)
+            client.enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    if (response.isSuccessful) {
+                        val body = response.body()
+                        if (body?.error == false) {
+                            val user = UserModel(body.loginResult.name, body.loginResult.userId)
+
+                            GlobalScope.launch {
+                                pref.saveTokenSetting(body.loginResult.token)
+                                pref.saveUser(user)
+                            }
+
+                            val msg = response.body()?.message ?: ""
+                            message.value = Result.Success(msg)
+                        } else {
+                            val msg = response.body()?.message ?: ""
+                            message.value = Result.Error(msg)
                         }
-
-                        val msg = response.body()?.message ?: ""
-                        message.value = Result.Success(msg)
                     } else {
-                        val msg = response.body()?.message ?: ""
-                        message.value = Result.Error(msg)
-                    }
-                } else {
-                    try {
-                        val jsonRes = convertErrorResponse(response.errorBody()?.string())
-                        val msg = jsonRes.message
-                        message.value = Result.Error(msg)
-                    } catch (e: Exception) {
-                        val msg = response.message()
-                        message.value = Result.Error(msg)
+                        try {
+                            val jsonRes = convertErrorResponse(response.errorBody()?.string())
+                            val msg = jsonRes.message
+                            message.value = Result.Error(msg)
+                        } catch (e: Exception) {
+                            val msg = response.message()
+                            message.value = Result.Error(msg)
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                message.value = Result.Error(t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    message.value = Result.Error(t.message.toString())
+                }
+            })
+        }
         return message
     }
 

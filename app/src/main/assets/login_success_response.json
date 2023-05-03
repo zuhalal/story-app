@@ -1,0 +1,9 @@
+{
+  "error": false,
+  "message": "success",
+  "loginResult": {
+    "userId": "user-ytIuyEXwwYDFTsim",
+    "name": "Zuhal",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXl0SXV5RVh3d1lERlRzaW0iLCJpYXQiOjE2ODMxMzA4ODd9.wkDnjO-dRh5VI59kqsik45CG1GtxNEPaTAHA2_HLUOM"
+  }
+}
