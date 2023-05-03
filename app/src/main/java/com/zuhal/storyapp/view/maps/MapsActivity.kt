@@ -2,6 +2,7 @@ package com.zuhal.storyapp.view.maps
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -95,7 +96,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val loginViewModel: LoginViewModel by viewModels { factory }
 
         getMyLocation()
+        setMapStyle()
         addManyMarker(mapsViewModel, loginViewModel)
+    }
+
+    private fun setMapStyle() {
+        try {
+            val success =
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (exception: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", exception)
+        }
     }
 
     private val boundsBuilder = LatLngBounds.Builder()
