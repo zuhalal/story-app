@@ -11,7 +11,6 @@ import com.zuhal.storyapp.data.local.room.StoryDatabase
 import com.zuhal.storyapp.data.remote.models.CommonResponse
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.data.remote.retrofit.ApiService
-import com.zuhal.storyapp.utils.AppExecutors
 import com.zuhal.storyapp.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -26,7 +25,6 @@ import retrofit2.Response
 class StoryUserRepository private constructor(
     private val apiService: ApiService,
     private val storyDao: StoryDao,
-    private val appExecutors: AppExecutors,
     private val database: StoryDatabase
 ) {
     private val message = MediatorLiveData<Result<String>>()
@@ -200,11 +198,10 @@ class StoryUserRepository private constructor(
         fun getInstance(
             apiService: ApiService,
             dao: StoryDao,
-            appExecutors: AppExecutors,
             database: StoryDatabase
         ): StoryUserRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryUserRepository(apiService, dao, appExecutors, database)
+                instance ?: StoryUserRepository(apiService, dao, database)
             }.also { instance = it }
     }
 }
