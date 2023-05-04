@@ -2,9 +2,7 @@ package com.zuhal.storyapp.customView
 
 import android.content.Context
 import android.graphics.Canvas
-import android.text.Editable
 import android.text.InputType
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Patterns
 import android.view.MotionEvent
