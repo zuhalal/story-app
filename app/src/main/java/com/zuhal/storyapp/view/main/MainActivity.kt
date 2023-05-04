@@ -3,9 +3,9 @@ package com.zuhal.storyapp.view.main
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         rvUser.layoutManager = LinearLayoutManager(this)
 
         loginViewModel.getToken().observe(this) { token ->
+            showLoading(true)
             if (token == "") {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity() {
                     .observe(this) { result ->
                         if (result != null) {
                             adapter.submitData(lifecycle, result)
+
+                            showLoading(false)
 
                             adapter.setOnItemClickCallback(object :
                                 ListStoryAdapter.OnItemClickCallback {
@@ -111,9 +114,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun showLoading(isLoading: Boolean) {
-//        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-//    }
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
 //
 //    private fun showNotFoundMessage(show: Boolean) {
 //        binding.notFound.visibility = if (show) View.VISIBLE else View.GONE

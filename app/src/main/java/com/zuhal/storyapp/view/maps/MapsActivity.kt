@@ -6,6 +6,7 @@ import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -87,7 +88,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         if (result != null) {
                             when (result) {
                                 is Result.Loading -> {
-
+                                    showLoading(true)
                                 }
                                 is Result.Success -> {
                                     val data = result.data
@@ -111,6 +112,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                             300
                                         )
                                     )
+
+                                    showLoading(false)
                                 }
                                 else -> {}
                             }
@@ -118,6 +121,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
             }
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private val requestPermissionLauncher =
