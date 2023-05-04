@@ -62,4 +62,5 @@
     <string name="location_not_found">Location is not found. Try Again</string>
     <string name="style_parsing_failed">Style parsing failed.</string>
     <string name="cant_find_style">\"Can\'t find style. Error: \"</string>
+    <string name="gps_required">You must enable GPS to use this application!</string>
 </resources>

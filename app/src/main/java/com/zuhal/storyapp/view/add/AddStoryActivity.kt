@@ -212,6 +212,11 @@ class AddStoryActivity : AppCompatActivity() {
                 }
                 else -> {
                     // No location access granted.
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        getString(R.string.gps_required),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -275,11 +280,11 @@ class AddStoryActivity : AppCompatActivity() {
         ) { result ->
             when (result.resultCode) {
                 RESULT_OK ->
-                    Log.i("ABC", "onActivityResult: All location settings are satisfied.")
+                    Log.i(TAG, "onActivityResult: All location settings are satisfied.")
                 RESULT_CANCELED ->
                     Toast.makeText(
                         this@AddStoryActivity,
-                        "Anda harus mengaktifkan GPS untuk menggunakan aplikasi ini!",
+                        getString(R.string.gps_required),
                         Toast.LENGTH_SHORT
                     ).show()
             }
@@ -398,6 +403,7 @@ class AddStoryActivity : AppCompatActivity() {
         const val CAMERA_X_RESULT = 200
         const val PICTURE_VALUE = "picture"
         const val IS_BACK_CAMERA_VALUE = "isBackCamera"
+        const val TAG = "AddStoryActivity"
 
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
