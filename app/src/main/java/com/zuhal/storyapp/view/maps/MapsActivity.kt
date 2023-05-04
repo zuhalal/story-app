@@ -30,8 +30,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var factory: ViewModelFactory
-    val mapsViewModel: MapsViewModel by viewModels { factory }
-    val loginViewModel: LoginViewModel by viewModels { factory }
+    private val mapsViewModel: MapsViewModel by viewModels { factory }
+    private val loginViewModel: LoginViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

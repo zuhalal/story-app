@@ -68,7 +68,7 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
         })
     }
 
-    fun isValidEmail(target: CharSequence): Boolean {
+    private fun isValidEmail(target: CharSequence): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 
