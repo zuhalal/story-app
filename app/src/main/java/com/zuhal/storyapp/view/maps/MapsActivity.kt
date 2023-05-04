@@ -6,7 +6,10 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -17,6 +20,7 @@ import com.zuhal.storyapp.databinding.ActivityMapsBinding
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.data.Result
+import com.zuhal.storyapp.view.add.AddStoryActivity
 import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
 
@@ -153,6 +157,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.isMyLocationEnabled = true
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.option_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_logout -> {
+                loginViewModel.logout()
+                return true
+            }
+            R.id.menu_add -> {
+                val intent = Intent(this@MapsActivity, AddStoryActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                return true
+            }
+            R.id.menu_language -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                return true
+            }
+            R.id.menu_maps -> {
+                val intent = Intent(this@MapsActivity, MapsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                return true
+            }
+            else -> return true
         }
     }
 

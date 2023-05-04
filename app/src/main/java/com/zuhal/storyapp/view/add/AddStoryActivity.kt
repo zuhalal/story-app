@@ -43,6 +43,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import com.google.android.gms.location.*
+import com.zuhal.storyapp.view.maps.MapsActivity
 import java.util.concurrent.TimeUnit
 
 class AddStoryActivity : AppCompatActivity() {
@@ -382,6 +383,12 @@ class AddStoryActivity : AppCompatActivity() {
             }
             R.id.menu_language -> {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                return true
+            }
+            R.id.menu_maps -> {
+                val intent = Intent(this@AddStoryActivity, MapsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
                 return true
             }
             else -> return true
