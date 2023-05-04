@@ -1,6 +1,5 @@
 package com.zuhal.storyapp.data
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -10,14 +9,12 @@ import com.zuhal.storyapp.data.local.room.StoryDatabase
 import com.zuhal.storyapp.data.remote.retrofit.ApiService
 import androidx.room.withTransaction
 import com.zuhal.storyapp.data.local.entity.RemoteKeysEntity
-import com.zuhal.storyapp.utils.AppExecutors
 
 @OptIn(ExperimentalPagingApi::class)
 class StoryRemoteMediator(
     private val database: StoryDatabase,
     private val apiService: ApiService,
     private val token: String,
-    private val appExecutors: AppExecutors,
 ) : RemoteMediator<Int, StoryEntity>() {
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -47,20 +44,14 @@ class StoryRemoteMediator(
         }
 
         try {
-            Log.d("MASUK MEDIATOR", "sadasd")
-
-            val responseData = apiService.getAllStories(token, page, state.config.pageSize)
+            val responseData = apiService.getAllStories(token, 0, page, state.config.pageSize)
             val endOfPaginationReached = responseData.listStory.isEmpty()
-
-            Log.d("Response data", responseData.listStory.toString())
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     database.remoteKeysDao().deleteRemoteKeys()
                     database.storyDao().deleteAllStories()
                 }
-
-                Log.d("Response transaksi", responseData.listStory.toString())
 
                 val prevKey = if (page == 1) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
@@ -86,14 +77,13 @@ class StoryRemoteMediator(
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: Exception) {
-            Log.d("MASUK exception", exception.message.toString())
             return MediatorResult.Error(exception)
         }
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, StoryEntity>): RemoteKeysEntity? {
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()?.let { data ->
-           database.remoteKeysDao().getRemoteKeysId(data.id)
+            database.remoteKeysDao().getRemoteKeysId(data.id)
         }
     }
 

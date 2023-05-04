@@ -1,6 +1,5 @@
 package com.zuhal.storyapp.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.liveData
@@ -10,8 +9,6 @@ import com.zuhal.storyapp.data.local.entity.StoryEntity
 import com.zuhal.storyapp.data.local.room.StoryDao
 import com.zuhal.storyapp.data.local.room.StoryDatabase
 import com.zuhal.storyapp.data.remote.models.CommonResponse
-import com.zuhal.storyapp.data.remote.models.GetAllStoryResponse
-import com.zuhal.storyapp.data.remote.models.LoginResponse
 import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.data.remote.retrofit.ApiService
 import com.zuhal.storyapp.utils.AppExecutors
@@ -23,6 +20,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 class StoryUserRepository private constructor(
@@ -31,8 +29,6 @@ class StoryUserRepository private constructor(
     private val appExecutors: AppExecutors,
     private val database: StoryDatabase
 ) {
-    private val apiLocationResult = MediatorLiveData<Result<List<Story>>>()
-
     private val message = MediatorLiveData<Result<String>>()
 
     private fun convertErrorResponse(stringRes: String?): CommonResponse {
@@ -66,7 +62,16 @@ class StoryUserRepository private constructor(
                     emit(Result.Error(msg))
                 }
             } catch (e: Exception) {
-                emit(Result.Error(e.message.toString()))
+                when (e) {
+                    is HttpException -> {
+                        val jsonRes = convertErrorResponse(e.response()?.errorBody().toString())
+                        val msg = jsonRes.message
+                        emit(Result.Error(msg))
+                    }
+                    else -> {
+                        emit(Result.Error(e.message.toString()))
+                    }
+                }
             }
         }
     }
@@ -110,61 +115,31 @@ class StoryUserRepository private constructor(
 
     fun getListStory(token: String):
             LiveData<PagingData<StoryEntity>> {
-        Log.d("MASUK RePo", "sadasd")
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 5
             ),
-            remoteMediator = StoryRemoteMediator(database, apiService, token, appExecutors),
+            remoteMediator = StoryRemoteMediator(database, apiService, token),
             pagingSourceFactory = {
                 database.storyDao().getStories()
             }
         ).liveData
     }
 
-    fun getListStoryLocation(token: String): LiveData<Result<List<Story>>> {
-        apiLocationResult.value = Result.Loading
-        val client = apiService.getAllStoriesWithLocation(token)
-        client.enqueue(object : Callback<GetAllStoryResponse> {
-            override fun onResponse(
-                call: Call<GetAllStoryResponse>,
-                response: Response<GetAllStoryResponse>
-            ) {
-                if (response.isSuccessful) {
-                    if (response.body()?.error == false) {
-                        val listStory = response.body()?.listStory as List<Story>
-                        val stories = ArrayList<StoryEntity>()
-                        appExecutors.diskIO.execute {
-                            listStory.forEach { story ->
-                                val storyEntity = StoryEntity(
-                                    story.id,
-                                    story.photoUrl,
-                                    story.createdAt,
-                                    story.name,
-                                    story.description
-                                )
-                                stories.add(storyEntity)
-                            }
-                            storyDao.deleteAllStories()
-                            storyDao.insert(stories)
-                        }
-
-                        apiLocationResult.value = Result.Success(listStory)
-                    } else {
-                        apiLocationResult.value = Result.Error(response.body()?.message ?: "")
-                    }
-                } else {
-                    apiLocationResult.value = Result.Error(response.message())
-                }
+    fun getListStoryLocation(token: String, location: Int = 0): LiveData<Result<List<Story>>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getAllStories(token, location)
+            if (!response.error) {
+                val listStory = response.listStory
+                emit(Result.Success(listStory))
+            } else {
+                emit(Result.Error(response.message))
             }
-
-            override fun onFailure(call: Call<GetAllStoryResponse>, t: Throwable) {
-                apiLocationResult.value = Result.Error(t.message.toString())
-            }
-        })
-
-        return apiLocationResult
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
     }
 
     fun postStory(

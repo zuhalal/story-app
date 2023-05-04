@@ -38,12 +38,8 @@ interface ApiService {
     @GET("stories")
     suspend fun getAllStories(
         @Header("Authorization") authorization: String,
+        @Query("location") location: Int = 0,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null
     ): GetAllStoryResponse
-
-    @GET("stories?location=1")
-    fun getAllStoriesWithLocation(
-        @Header("Authorization") authorization: String
-    ): Call<GetAllStoryResponse>
 }

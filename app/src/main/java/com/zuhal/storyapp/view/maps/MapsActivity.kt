@@ -82,7 +82,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addManyMarker(mapsViewModel: MapsViewModel, loginViewModel: LoginViewModel) {
         loginViewModel.getToken().observe(this) { token ->
             if (token != "") {
-                mapsViewModel.getListStoriesLocation("${getString(R.string.bearer)} $token")
+                mapsViewModel.getListStoriesLocation( "${getString(R.string.bearer)} $token", 1)
                     .observe(this) { result ->
                         if (result != null) {
                             when (result) {
