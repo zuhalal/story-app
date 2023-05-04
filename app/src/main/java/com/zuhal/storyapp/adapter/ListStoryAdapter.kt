@@ -73,7 +73,7 @@ class ListStoryAdapter :
             }
 
             override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.id == newItem.id && oldItem.name == newItem.name && oldItem.description == newItem.description && oldItem.photoUrl == newItem.photoUrl
             }
         }
     }
