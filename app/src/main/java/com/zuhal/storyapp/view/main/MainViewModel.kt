@@ -9,6 +9,12 @@ import okhttp3.RequestBody
 
 class MainViewModel(private val repository: StoryUserRepository) : ViewModel() {
     fun getListStories(token: String) = repository.getListStory(token).cachedIn(viewModelScope)
-    fun postStory(image: MultipartBody.Part, description: RequestBody, token: String, long: RequestBody? = null, lat: RequestBody? = null) =
+    fun postStory(
+        image: MultipartBody.Part,
+        description: RequestBody,
+        token: String,
+        long: RequestBody? = null,
+        lat: RequestBody? = null
+    ) =
         repository.postStory(image, description, token, long, lat)
 }

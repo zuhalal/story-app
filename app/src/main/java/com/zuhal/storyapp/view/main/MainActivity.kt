@@ -117,10 +117,6 @@ class MainActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
-//
-//    private fun showNotFoundMessage(show: Boolean) {
-//        binding.notFound.visibility = if (show) View.VISIBLE else View.GONE
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
