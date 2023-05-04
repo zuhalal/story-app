@@ -11,7 +11,6 @@ import androidx.activity.viewModels
 import com.zuhal.storyapp.extensions.loadImageCenterCrop
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.data.local.entity.StoryEntity
-import com.zuhal.storyapp.data.remote.models.Story
 import com.zuhal.storyapp.databinding.ActivityStoryDetailBinding
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.view.add.AddStoryActivity
@@ -22,6 +21,7 @@ import com.zuhal.storyapp.view.maps.MapsActivity
 class StoryDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryDetailBinding
     private lateinit var factory: ViewModelFactory
+    private val loginViewModel: LoginViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +30,6 @@ class StoryDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         factory = ViewModelFactory.getInstance(this)
-
-        val loginViewModel: LoginViewModel by viewModels { factory }
 
         loginViewModel.getToken().observe(this) { token ->
             if (token == "") {
@@ -64,7 +62,6 @@ class StoryDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_logout -> {
-                val loginViewModel: LoginViewModel by viewModels { factory }
                 loginViewModel.logout()
                 return true
             }
