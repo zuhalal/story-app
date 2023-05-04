@@ -64,7 +64,7 @@ class StoryUserRepository private constructor(
             } catch (e: Exception) {
                 when (e) {
                     is HttpException -> {
-                        val jsonRes = convertErrorResponse(e.response()?.errorBody().toString())
+                        val jsonRes = convertErrorResponse(e.response()?.errorBody()?.string())
                         val msg = jsonRes.message
                         emit(Result.Error(msg))
                     }
@@ -122,7 +122,7 @@ class StoryUserRepository private constructor(
             ),
             remoteMediator = StoryRemoteMediator(database, apiService, token),
             pagingSourceFactory = {
-                database.storyDao().getStories()
+                storyDao.getStories()
             }
         ).liveData
     }
