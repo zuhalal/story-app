@@ -54,7 +54,6 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var myLocation: Location
     private var getFile: File? = null
     private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val mainViewModel: MainViewModel by viewModels { factory }
     private val loginViewModel: LoginViewModel by viewModels { factory }
