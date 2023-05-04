@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -97,6 +98,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 }
                                 is Result.Success -> {
                                     val data = result.data
+
+                                    if (data.isEmpty()) {
+                                        Toast.makeText(
+                                            this,
+                                            getString(R.string.no_location_data),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
 
                                     data.forEach { story ->
                                         if (story.lat != null && story.lon != null) {
