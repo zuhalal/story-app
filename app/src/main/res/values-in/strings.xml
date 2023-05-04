@@ -61,4 +61,6 @@
     <string name="retry">Coba Lagi</string>
     <string name="location_switch">Gunakan lokasi saat ini</string>
     <string name="location_not_found">Lokasi tidak ditemukan. Silakan coba lagi.</string>
+    <string name="style_parsing_failed">Proses mengolah style peta gagal.</string>
+    <string name="cant_find_style">\"Tidak bisa menemukan style peta yang diminta. Error: \"</string>
 </resources>

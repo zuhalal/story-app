@@ -1,6 +1,7 @@
 package com.zuhal.storyapp.view.maps
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.zuhal.storyapp.databinding.ActivityMapsBinding
 import com.zuhal.storyapp.R
 import com.zuhal.storyapp.view.ViewModelFactory
 import com.zuhal.storyapp.data.Result
+import com.zuhal.storyapp.view.login.LoginActivity
 import com.zuhal.storyapp.view.login.LoginViewModel
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -23,6 +25,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var factory: ViewModelFactory
+    val mapsViewModel: MapsViewModel by viewModels { factory }
+    val loginViewModel: LoginViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,12 +62,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             poiMarker?.showInfoWindow()
         }
 
-        val mapsViewModel: MapsViewModel by viewModels { factory }
-        val loginViewModel: LoginViewModel by viewModels { factory }
-
         getMyLocation()
         setMapStyle()
-        addManyMarker(mapsViewModel, loginViewModel)
+        addManyMarker()
     }
 
     private fun setMapStyle() {
@@ -71,19 +72,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val success =
                 mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
             if (!success) {
-                Log.e(TAG, "Style parsing failed.")
+                Log.e(TAG, getString(R.string.style_parsing_failed))
             }
         } catch (exception: Resources.NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", exception)
+            Log.e(TAG, getString(R.string.cant_find_style), exception)
         }
     }
 
     private val boundsBuilder = LatLngBounds.Builder()
 
-    private fun addManyMarker(mapsViewModel: MapsViewModel, loginViewModel: LoginViewModel) {
+    private fun addManyMarker() {
         loginViewModel.getToken().observe(this) { token ->
             if (token != "") {
-                mapsViewModel.getListStoriesLocation( "${getString(R.string.bearer)} $token", 1)
+                mapsViewModel.getListStoriesLocation("${getString(R.string.bearer)} $token", 1)
                     .observe(this) { result ->
                         if (result != null) {
                             when (result) {
@@ -115,10 +116,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                                     showLoading(false)
                                 }
-                                else -> {}
+                                else -> {
+                                    showLoading(false)
+                                }
                             }
                         }
                     }
+            } else {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
             }
         }
     }
